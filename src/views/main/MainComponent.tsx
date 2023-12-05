@@ -33,6 +33,7 @@ import {
   SignalIcon,
 } from 'lucide-react';
 import { useState } from 'react';
+import HeaderIcon from './components/HeaderIcon';
 
 const MainComponent = () => {
   const [showSidebar, setShowSidebar] = useState(false);
@@ -51,31 +52,21 @@ const MainComponent = () => {
                 <img src='assets/logo.png' alt='logo' className='w-40' />
               </div>
               <div className='flex gap-2 items-center pr-2'>
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button
-                        variant='outline'
-                        size='icon'
-                        className='rounded-full'>
-                        <Book className='h-5 w-5' />
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>Book</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
+                <HeaderIcon tooltip='Aviso de privacidad'>
+                  <Book className='h-5 w-5' />
+                </HeaderIcon>
 
-                <Button variant='outline' size='icon' className='rounded-full'>
+                <HeaderIcon tooltip='Configuración'>
                   <Settings className='h-5 w-5' />
-                </Button>
-                <Button variant='outline' size='icon' className='rounded-full'>
+                </HeaderIcon>
+
+                <HeaderIcon tooltip='Cerrar sesión'>
                   <LogOut className='h-5 w-5' />
-                </Button>
-                <Button variant='outline' size='icon' className='rounded-full'>
+                </HeaderIcon>
+
+                <HeaderIcon tooltip='Explicación de la pantalla principal'>
                   <HelpCircleIcon className='h-5 w-5' />
-                </Button>
+                </HeaderIcon>
               </div>
             </header>
             <div className='h-12 flex'>
