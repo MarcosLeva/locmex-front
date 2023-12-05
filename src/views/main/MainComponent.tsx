@@ -34,6 +34,7 @@ import {
 } from 'lucide-react';
 import { useState } from 'react';
 import HeaderIcon from './components/HeaderIcon';
+import AccordionEntry from './components/AccordionEntry';
 
 const MainComponent = () => {
   const [showSidebar, setShowSidebar] = useState(false);
@@ -81,33 +82,59 @@ const MainComponent = () => {
                 <span>Informes</span>
               </Button>
             </div>
-            <Accordion type='single' collapsible className='w-full text-white'>
-              <AccordionItem value='item-1'>
-                <AccordionTrigger className='uppercase px-4'>
-                  Unidades
-                </AccordionTrigger>
-                <AccordionContent className='p-4'>
-                  Yes. It adheres to the WAI-ARIA design pattern.
-                </AccordionContent>
-              </AccordionItem>
-              <AccordionItem value='item-2'>
-                <AccordionTrigger className='uppercase px-4'>
-                  Geocercas
-                </AccordionTrigger>
-                <AccordionContent className='p-4'>
-                  Yes. It comes with default styles that matches the other
-                  components&apos; aesthetic.
-                </AccordionContent>
-              </AccordionItem>
-              <AccordionItem value='item-3'>
-                <AccordionTrigger className='uppercase px-4'>
-                  Puntos de interés
-                </AccordionTrigger>
-                <AccordionContent className='p-4'>
-                  Yes. It&apos;s animated by default, but you can disable it if
-                  you prefer.
-                </AccordionContent>
-              </AccordionItem>
+            <Accordion
+              type='single'
+              collapsible
+              className='w-full text-white'
+              defaultValue='item-1'>
+              <AccordionEntry value='item-1' title='Unidades'>
+                <div className='flex flex-col gap-2'>
+                  <Button variant={'outline'} className='flex-1 rounded-none'>
+                    <ShieldQuestionIcon className='w-6 h-6' />
+                    <span>Unidades</span>
+                  </Button>
+                  <Button variant={'outline'} className='flex-1 rounded-none'>
+                    <ShieldQuestionIcon className='w-6 h-6' />
+                    <span>Unidades</span>
+                  </Button>
+                  <Button variant={'outline'} className='flex-1 rounded-none'>
+                    <ShieldQuestionIcon className='w-6 h-6' />
+                    <span>Unidades</span>
+                  </Button>
+                </div>
+              </AccordionEntry>
+              <AccordionEntry value='item-2' title='Geocercas'>
+                <div className='flex flex-col gap-2'>
+                  <Button variant={'outline'} className='flex-1 rounded-none'>
+                    <ShieldQuestionIcon className='w-6 h-6' />
+                    <span>Geocercas</span>
+                  </Button>
+                  <Button variant={'outline'} className='flex-1 rounded-none'>
+                    <ShieldQuestionIcon className='w-6 h-6' />
+                    <span>Geocercas</span>
+                  </Button>
+                  <Button variant={'outline'} className='flex-1 rounded-none'>
+                    <ShieldQuestionIcon className='w-6 h-6' />
+                    <span>Geocercas</span>
+                  </Button>
+                </div>
+              </AccordionEntry>
+              <AccordionEntry value='item-3' title='Puntos de interés'>
+                <div className='flex flex-col gap-2'>
+                  <Button variant={'outline'} className='flex-1 rounded-none'>
+                    <ShieldQuestionIcon className='w-6 h-6' />
+                    <span>Rutas</span>
+                  </Button>
+                  <Button variant={'outline'} className='flex-1 rounded-none'>
+                    <ShieldQuestionIcon className='w-6 h-6' />
+                    <span>Rutas</span>
+                  </Button>
+                  <Button variant={'outline'} className='flex-1 rounded-none'>
+                    <ShieldQuestionIcon className='w-6 h-6' />
+                    <span>Rutas</span>
+                  </Button>
+                </div>
+              </AccordionEntry>
             </Accordion>
           </div>
         </div>
