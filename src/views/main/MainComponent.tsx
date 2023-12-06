@@ -38,6 +38,7 @@ import { useState } from 'react';
 import HeaderIcon from './components/HeaderIcon';
 import AccordionEntry from './components/AccordionEntry';
 import MapComponent from './Map';
+import SidebarHeader from './components/SidebarHeader';
 
 const MainComponent = () => {
   const [showSidebar, setShowSidebar] = useState(false);
@@ -55,28 +56,7 @@ const MainComponent = () => {
             'w-full md:w-[28rem]'
           )}>
           <div className='flex flex-col'>
-            <header className='bg-slate-900 h-16 flex justify-between'>
-              <div className='p-4 flex justify-center items-center'>
-                <img src='assets/logo.png' alt='logo' className='w-32' />
-              </div>
-              <div className='flex gap-2 items-center pr-2'>
-                <HeaderIcon tooltip='Aviso de privacidad'>
-                  <Book className='h-5 w-5' />
-                </HeaderIcon>
-
-                <HeaderIcon tooltip='Configuración'>
-                  <Settings className='h-5 w-5' />
-                </HeaderIcon>
-
-                <HeaderIcon tooltip='Cerrar sesión'>
-                  <LogOut className='h-5 w-5' />
-                </HeaderIcon>
-
-                <HeaderIcon tooltip='Cerrar' onClick={handleSidebar}>
-                  <X className='h-5 w-5' />
-                </HeaderIcon>
-              </div>
-            </header>
+            <SidebarHeader handleSidebar={handleSidebar} />
             <div className='h-12 flex'>
               <Button className='flex-1 rounded-none' variant={'outline'}>
                 <FileQuestionIcon className='w-6 h-6' />
@@ -88,6 +68,7 @@ const MainComponent = () => {
                 <FileIcon className='mr-2' />
                 <span>Informes</span>
               </Button>
+              S
             </div>
             <Accordion
               type='single'
