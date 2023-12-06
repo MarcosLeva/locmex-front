@@ -29,6 +29,7 @@ import {
   MenuIcon,
   Settings,
   ShieldQuestionIcon,
+  Sidebar,
   Sigma,
   SignalIcon,
   X,
@@ -42,7 +43,7 @@ const MainComponent = () => {
   const [showSidebar, setShowSidebar] = useState(false);
 
   const handleSidebar = () => {
-    setShowSidebar(!showSidebar);
+    setShowSidebar((prev) => !prev);
   };
 
   return (
@@ -151,17 +152,21 @@ const MainComponent = () => {
             'hidden md:block absolute  w-5 p-0 h-36 rounded-l-none rounded-tr-2xl rounded-br-2xl top-36 z-10'
           )}
           onClick={handleSidebar}></Button>
-        <Button
-          variant={'secondary'}
-          size={'icon'}
-          className={classNames(
-            showSidebar && 'hidden',
-            'absolute  md:hidden p-0 h-10 w-10 rounded-full bottom-4 right-4 z-10'
+        <div className='flex-auto flex flex-col'>
+          {!showSidebar && (
+            <header className='bg-slate-900 h-16 flex justify-between md:hidden'>
+              <div className='p-4 flex justify-center items-center'>
+                <img src='assets/logo.png' alt='logo' className='w-32' />
+              </div>
+              <div className='flex gap-2 items-center pr-2'>
+                <HeaderIcon tooltip='Abrir menu' onClick={handleSidebar}>
+                  <Menu className='h-5 w-5' />
+                </HeaderIcon>
+              </div>
+            </header>
           )}
-          onClick={handleSidebar}>
-          <MenuIcon className='w-5 h-5' />
-        </Button>
-        <MapComponent />
+          <MapComponent />
+        </div>
       </div>
     </>
   );

@@ -1,7 +1,5 @@
+'use client';
 import { APIProvider, Map, Marker } from '@vis.gl/react-google-maps';
-import { PiIcon, Truck } from 'lucide-react';
-
-function App() {}
 
 const MapComponent = () => {
   const position = { lat: 19.33211, lng: -98.57688 };
@@ -21,7 +19,7 @@ const MapComponent = () => {
   ];
 
   return (
-    <div className='flex-auto w-auto h-screen z-0'>
+    <div className=' w-auto h-screen z-0 '>
       <APIProvider apiKey={process.env.NEXT_PUBLIC_MAPS_KEY || ''}>
         <Map zoom={10} center={position}>
           {truckPositions.map((truckPosition, index) => (
