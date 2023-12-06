@@ -31,6 +31,7 @@ import {
   ShieldQuestionIcon,
   Sigma,
   SignalIcon,
+  X,
 } from 'lucide-react';
 import { useState } from 'react';
 import HeaderIcon from './components/HeaderIcon';
@@ -46,7 +47,11 @@ const MainComponent = () => {
   return (
     <>
       <div className='w-full h-screen flex'>
-        <div className={classNames(!showSidebar && 'hidden', ' w-[28rem]')}>
+        <div
+          className={classNames(
+            !showSidebar && 'hidden',
+            'w-full md:w-[28rem]'
+          )}>
           <div className='flex flex-col'>
             <header className='bg-slate-900 h-16 flex justify-between'>
               <div className='p-2 flex justify-center items-center'>
@@ -65,8 +70,8 @@ const MainComponent = () => {
                   <LogOut className='h-5 w-5' />
                 </HeaderIcon>
 
-                <HeaderIcon tooltip='Explicación de la pantalla principal'>
-                  <HelpCircleIcon className='h-5 w-5' />
+                <HeaderIcon tooltip='Cerrar' onClick={handleSidebar}>
+                  <X className='h-5 w-5' />
                 </HeaderIcon>
               </div>
             </header>
@@ -142,9 +147,19 @@ const MainComponent = () => {
           variant={'secondary'}
           className={classNames(
             showSidebar && 'left-[28rem]',
-            'absolute  w-5 p-0 h-36 rounded-l-none rounded-tr-2xl rounded-br-2xl top-36 '
+            'hidden md:block absolute  w-5 p-0 h-36 rounded-l-none rounded-tr-2xl rounded-br-2xl top-36'
           )}
           onClick={handleSidebar}></Button>
+        <Button
+          variant={'secondary'}
+          size={'icon'}
+          className={classNames(
+            showSidebar && 'hidden',
+            'absolute  md:hidden p-0 h-10 w-10 rounded-full bottom-4 right-4'
+          )}
+          onClick={handleSidebar}>
+          <MenuIcon className='w-5 h-5' />
+        </Button>
         <div className='bg-green-500 flex-auto'></div>
       </div>
     </>

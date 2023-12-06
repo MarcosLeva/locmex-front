@@ -9,14 +9,19 @@ import {
 type Props = {
   children: React.ReactNode;
   tooltip: string;
+  onClick?: () => void;
 };
 
-const HeaderIcon: React.FC<Props> = ({ children, tooltip }) => {
+const HeaderIcon: React.FC<Props> = ({ children, tooltip, onClick }) => {
   return (
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger asChild>
-          <Button variant='outline' size='icon' className='rounded-full'>
+          <Button
+            variant='outline'
+            size='icon'
+            className='rounded-full'
+            onClick={onClick}>
             {children}
           </Button>
         </TooltipTrigger>
