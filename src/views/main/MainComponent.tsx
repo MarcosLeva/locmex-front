@@ -54,8 +54,8 @@ const MainComponent = () => {
           )}>
           <div className='flex flex-col'>
             <header className='bg-slate-900 h-16 flex justify-between'>
-              <div className='p-2 flex justify-center items-center'>
-                <img src='assets/logo.png' alt='logo' className='w-40' />
+              <div className='p-4 flex justify-center items-center'>
+                <img src='assets/logo.png' alt='logo' className='w-32' />
               </div>
               <div className='flex gap-2 items-center pr-2'>
                 <HeaderIcon tooltip='Aviso de privacidad'>
