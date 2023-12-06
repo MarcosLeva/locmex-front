@@ -36,6 +36,7 @@ import {
 import { useState } from 'react';
 import HeaderIcon from './components/HeaderIcon';
 import AccordionEntry from './components/AccordionEntry';
+import MapComponent from './Map';
 
 const MainComponent = () => {
   const [showSidebar, setShowSidebar] = useState(false);
@@ -147,7 +148,7 @@ const MainComponent = () => {
           variant={'secondary'}
           className={classNames(
             showSidebar && 'left-[28rem]',
-            'hidden md:block absolute  w-5 p-0 h-36 rounded-l-none rounded-tr-2xl rounded-br-2xl top-36'
+            'hidden md:block absolute  w-5 p-0 h-36 rounded-l-none rounded-tr-2xl rounded-br-2xl top-36 z-10'
           )}
           onClick={handleSidebar}></Button>
         <Button
@@ -155,12 +156,12 @@ const MainComponent = () => {
           size={'icon'}
           className={classNames(
             showSidebar && 'hidden',
-            'absolute  md:hidden p-0 h-10 w-10 rounded-full bottom-4 right-4'
+            'absolute  md:hidden p-0 h-10 w-10 rounded-full bottom-4 right-4 z-10'
           )}
           onClick={handleSidebar}>
           <MenuIcon className='w-5 h-5' />
         </Button>
-        <div className='bg-green-500 flex-auto'></div>
+        <MapComponent />
       </div>
     </>
   );
