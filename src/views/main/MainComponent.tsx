@@ -29,123 +29,62 @@ import {
   MenuIcon,
   Settings,
   ShieldQuestionIcon,
+  Sidebar,
   Sigma,
   SignalIcon,
+  X,
 } from 'lucide-react';
 import { useState } from 'react';
 import HeaderIcon from './components/HeaderIcon';
 import AccordionEntry from './components/AccordionEntry';
+import MapComponent from './Map';
+import SidebarHeader from './components/SidebarHeader';
+import SidebarNavbar from './components/SidebarNavbar';
+import SidebarContent from './components/SidebarContent';
 
 const MainComponent = () => {
   const [showSidebar, setShowSidebar] = useState(false);
 
   const handleSidebar = () => {
-    setShowSidebar(!showSidebar);
+    setShowSidebar((prev) => !prev);
   };
 
   return (
     <>
       <div className='w-full h-screen flex'>
-        <div className={classNames(!showSidebar && 'hidden', ' w-[28rem]')}>
+        <div
+          className={classNames(
+            !showSidebar && 'hidden',
+            'w-full md:w-[28rem]'
+          )}>
           <div className='flex flex-col'>
-            <header className='bg-slate-900 h-16 flex justify-between'>
-              <div className='p-2 flex justify-center items-center'>
-                <img src='assets/logo.png' alt='logo' className='w-40' />
-              </div>
-              <div className='flex gap-2 items-center pr-2'>
-                <HeaderIcon tooltip='Aviso de privacidad'>
-                  <Book className='h-5 w-5' />
-                </HeaderIcon>
-
-                <HeaderIcon tooltip='Configuración'>
-                  <Settings className='h-5 w-5' />
-                </HeaderIcon>
-
-                <HeaderIcon tooltip='Cerrar sesión'>
-                  <LogOut className='h-5 w-5' />
-                </HeaderIcon>
-
-                <HeaderIcon tooltip='Explicación de la pantalla principal'>
-                  <HelpCircleIcon className='h-5 w-5' />
-                </HeaderIcon>
-              </div>
-            </header>
-            <div className='h-12 flex'>
-              <Button className='flex-1 rounded-none' variant={'outline'}>
-                <FileQuestionIcon className='w-6 h-6' />
-              </Button>
-              <Button className='flex-1 rounded-none' variant={'outline'}>
-                <Menu className='mr-2' /> <span>Menu</span>
-              </Button>
-              <Button className='flex-1 rounded-none' variant={'outline'}>
-                <FileIcon className='mr-2' />
-                <span>Informes</span>
-              </Button>
-            </div>
-            <Accordion
-              type='single'
-              collapsible
-              className='w-full text-white'
-              defaultValue='item-1'>
-              <AccordionEntry value='item-1' title='Unidades'>
-                <div className='flex flex-col gap-2'>
-                  <Button variant={'outline'} className='flex-1 rounded-none'>
-                    <ShieldQuestionIcon className='w-6 h-6' />
-                    <span>Unidades</span>
-                  </Button>
-                  <Button variant={'outline'} className='flex-1 rounded-none'>
-                    <ShieldQuestionIcon className='w-6 h-6' />
-                    <span>Unidades</span>
-                  </Button>
-                  <Button variant={'outline'} className='flex-1 rounded-none'>
-                    <ShieldQuestionIcon className='w-6 h-6' />
-                    <span>Unidades</span>
-                  </Button>
-                </div>
-              </AccordionEntry>
-              <AccordionEntry value='item-2' title='Geocercas'>
-                <div className='flex flex-col gap-2'>
-                  <Button variant={'outline'} className='flex-1 rounded-none'>
-                    <ShieldQuestionIcon className='w-6 h-6' />
-                    <span>Geocercas</span>
-                  </Button>
-                  <Button variant={'outline'} className='flex-1 rounded-none'>
-                    <ShieldQuestionIcon className='w-6 h-6' />
-                    <span>Geocercas</span>
-                  </Button>
-                  <Button variant={'outline'} className='flex-1 rounded-none'>
-                    <ShieldQuestionIcon className='w-6 h-6' />
-                    <span>Geocercas</span>
-                  </Button>
-                </div>
-              </AccordionEntry>
-              <AccordionEntry value='item-3' title='Puntos de interés'>
-                <div className='flex flex-col gap-2'>
-                  <Button variant={'outline'} className='flex-1 rounded-none'>
-                    <ShieldQuestionIcon className='w-6 h-6' />
-                    <span>Rutas</span>
-                  </Button>
-                  <Button variant={'outline'} className='flex-1 rounded-none'>
-                    <ShieldQuestionIcon className='w-6 h-6' />
-                    <span>Rutas</span>
-                  </Button>
-                  <Button variant={'outline'} className='flex-1 rounded-none'>
-                    <ShieldQuestionIcon className='w-6 h-6' />
-                    <span>Rutas</span>
-                  </Button>
-                </div>
-              </AccordionEntry>
-            </Accordion>
+            <SidebarHeader handleSidebar={handleSidebar} />
+            <SidebarNavbar />
+            <SidebarContent />
           </div>
         </div>
         <Button
           variant={'secondary'}
           className={classNames(
             showSidebar && 'left-[28rem]',
-            'absolute  w-5 p-0 h-36 rounded-l-none rounded-tr-2xl rounded-br-2xl top-36 '
+            'hidden md:block absolute  w-5 p-0 h-36 rounded-l-none rounded-tr-2xl rounded-br-2xl top-36 z-10'
           )}
           onClick={handleSidebar}></Button>
-        <div className='bg-green-500 flex-auto'></div>
+        <div className='flex-auto flex flex-col'>
+          {!showSidebar && (
+            <header className='bg-slate-900 h-16 flex justify-between md:hidden'>
+              <div className='p-4 flex justify-center items-center'>
+                <img src='assets/logo.png' alt='logo' className='w-32' />
+              </div>
+              <div className='flex gap-2 items-center pr-2'>
+                <HeaderIcon tooltip='Abrir menu' onClick={handleSidebar}>
+                  <Menu className='h-5 w-5' />
+                </HeaderIcon>
+              </div>
+            </header>
+          )}
+          <MapComponent />
+        </div>
       </div>
     </>
   );
