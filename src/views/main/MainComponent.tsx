@@ -40,6 +40,7 @@ import AccordionEntry from './components/AccordionEntry';
 import MapComponent from './Map';
 import SidebarHeader from './components/SidebarHeader';
 import SidebarNavbar from './components/SidebarNavbar';
+import SidebarContent from './components/SidebarContent';
 
 const MainComponent = () => {
   const [showSidebar, setShowSidebar] = useState(false);
@@ -59,60 +60,7 @@ const MainComponent = () => {
           <div className='flex flex-col'>
             <SidebarHeader handleSidebar={handleSidebar} />
             <SidebarNavbar />
-            <Accordion
-              type='single'
-              collapsible
-              className='w-full text-white'
-              defaultValue='item-1'>
-              <AccordionEntry value='item-1' title='Unidades'>
-                <div className='flex flex-col gap-2'>
-                  <Button variant={'outline'} className='flex-1 rounded-none'>
-                    <ShieldQuestionIcon className='w-6 h-6' />
-                    <span>Unidades</span>
-                  </Button>
-                  <Button variant={'outline'} className='flex-1 rounded-none'>
-                    <ShieldQuestionIcon className='w-6 h-6' />
-                    <span>Unidades</span>
-                  </Button>
-                  <Button variant={'outline'} className='flex-1 rounded-none'>
-                    <ShieldQuestionIcon className='w-6 h-6' />
-                    <span>Unidades</span>
-                  </Button>
-                </div>
-              </AccordionEntry>
-              <AccordionEntry value='item-2' title='Geocercas'>
-                <div className='flex flex-col gap-2'>
-                  <Button variant={'outline'} className='flex-1 rounded-none'>
-                    <ShieldQuestionIcon className='w-6 h-6' />
-                    <span>Geocercas</span>
-                  </Button>
-                  <Button variant={'outline'} className='flex-1 rounded-none'>
-                    <ShieldQuestionIcon className='w-6 h-6' />
-                    <span>Geocercas</span>
-                  </Button>
-                  <Button variant={'outline'} className='flex-1 rounded-none'>
-                    <ShieldQuestionIcon className='w-6 h-6' />
-                    <span>Geocercas</span>
-                  </Button>
-                </div>
-              </AccordionEntry>
-              <AccordionEntry value='item-3' title='Puntos de interés'>
-                <div className='flex flex-col gap-2'>
-                  <Button variant={'outline'} className='flex-1 rounded-none'>
-                    <ShieldQuestionIcon className='w-6 h-6' />
-                    <span>Rutas</span>
-                  </Button>
-                  <Button variant={'outline'} className='flex-1 rounded-none'>
-                    <ShieldQuestionIcon className='w-6 h-6' />
-                    <span>Rutas</span>
-                  </Button>
-                  <Button variant={'outline'} className='flex-1 rounded-none'>
-                    <ShieldQuestionIcon className='w-6 h-6' />
-                    <span>Rutas</span>
-                  </Button>
-                </div>
-              </AccordionEntry>
-            </Accordion>
+            <SidebarContent />
           </div>
         </div>
         <Button
