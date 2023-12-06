@@ -39,6 +39,7 @@ import HeaderIcon from './components/HeaderIcon';
 import AccordionEntry from './components/AccordionEntry';
 import MapComponent from './Map';
 import SidebarHeader from './components/SidebarHeader';
+import SidebarNavbar from './components/SidebarNavbar';
 
 const MainComponent = () => {
   const [showSidebar, setShowSidebar] = useState(false);
@@ -57,19 +58,7 @@ const MainComponent = () => {
           )}>
           <div className='flex flex-col'>
             <SidebarHeader handleSidebar={handleSidebar} />
-            <div className='h-12 flex'>
-              <Button className='flex-1 rounded-none' variant={'outline'}>
-                <FileQuestionIcon className='w-6 h-6' />
-              </Button>
-              <Button className='flex-1 rounded-none' variant={'outline'}>
-                <Menu className='mr-2' /> <span>Menu</span>
-              </Button>
-              <Button className='flex-1 rounded-none' variant={'outline'}>
-                <FileIcon className='mr-2' />
-                <span>Informes</span>
-              </Button>
-              S
-            </div>
+            <SidebarNavbar />
             <Accordion
               type='single'
               collapsible
