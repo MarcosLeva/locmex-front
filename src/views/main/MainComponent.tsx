@@ -1,39 +1,9 @@
 'use client';
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from '@/components/ui/accordion';
+
 import { Button } from '@/components/ui/button';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
+
 import { classNames } from '@/utils/classnames';
-import {
-  BadgeHelpIcon,
-  Book,
-  BookAIcon,
-  ExternalLinkIcon,
-  FileIcon,
-  FileQuestionIcon,
-  HeartPulseIcon,
-  HelpCircle,
-  HelpCircleIcon,
-  HelpingHand,
-  LogOut,
-  Menu,
-  MenuIcon,
-  Settings,
-  ShieldQuestionIcon,
-  Sidebar,
-  Sigma,
-  SignalIcon,
-  X,
-} from 'lucide-react';
+import { Menu } from 'lucide-react';
 import { useState } from 'react';
 import HeaderIcon from './components/HeaderIcon';
 import AccordionEntry from './components/AccordionEntry';

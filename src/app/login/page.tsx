@@ -1,8 +1,10 @@
-'use client';
-
 import Image from 'next/image';
 import Link from 'next/link';
 import { UserAuthForm } from './components/user-auth-form';
+
+export const metadata = {
+  title: 'Authentication',
+};
 
 export default function AuthenticationPage() {
   return (
