@@ -43,11 +43,10 @@ export const authUser = async (user: User): Promise<Response> => {
       'http://54.214.130.15:8082/api/account/authenticate',
       config
     );
-    console.log(response);
 
     if (response.status === 200) {
       return {
-        token,
+        token: response.data.token,
         success: true,
         message: 'Autenticación exitosa',
       };

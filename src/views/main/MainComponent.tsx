@@ -11,20 +11,22 @@ import SidebarHeader from './components/SidebarHeader';
 import SidebarNavbar from './components/SidebarNavbar';
 import SidebarContent from './components/SidebarContent';
 import { useRouter } from 'next/navigation';
+import { useAuthStore } from '@/stores/auth';
 
 const MainComponent = () => {
   const [showSidebar, setShowSidebar] = useState(true);
   const router = useRouter();
+  const isAuth = useAuthStore.getState().isAuth;
 
   const handleSidebar = () => {
     setShowSidebar((prev) => !prev);
   };
 
   useLayoutEffect(() => {
-    // if (true) {
-    //   router.push('/login');
-    // }
-  }, [router]);
+    if (!isAuth) {
+      router.push('/login');
+    }
+  }, [isAuth, router]);
 
   return (
     <>

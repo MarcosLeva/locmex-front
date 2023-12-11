@@ -10,10 +10,12 @@ import { Input } from '@/components/ui/input';
 // import { authUser } from '@/services/authUser';
 import { useRouter } from 'next/navigation';
 import { authUser } from '@/services/authUser';
+import { useAuthStore } from '@/stores/auth';
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
+  const { login } = useAuthStore();
 
   const router = useRouter();
 
@@ -33,11 +35,11 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
   async function onSubmit(event: React.SyntheticEvent) {
     event.preventDefault();
     setIsLoading(true);
-    console.log(user);
 
     const response = await authUser(user);
     setIsLoading(false);
     if (response.success) {
+      login(response.token);
       router.push('/');
     }
     window.alert(response.message);
