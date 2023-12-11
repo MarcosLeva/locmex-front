@@ -1,7 +1,7 @@
 'use client';
 import { Accordion } from '@/components/ui/accordion';
 import AccordionEntry from './AccordionEntry';
-import { ShieldQuestionIcon } from 'lucide-react';
+import { Compass, MapPin, ShieldQuestionIcon, Truck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const SidebarContent = () => {
@@ -11,7 +11,7 @@ const SidebarContent = () => {
       collapsible
       className='w-full text-white'
       defaultValue='item-1'>
-      <AccordionEntry value='item-1' title='Unidades'>
+      <AccordionEntry value='item-1' title='Unidades' icon={<Truck />}>
         <div className='flex flex-col gap-2'>
           <Button variant={'outline'} className='flex-1 rounded-none'>
             <ShieldQuestionIcon className='w-6 h-6' />
@@ -27,7 +27,7 @@ const SidebarContent = () => {
           </Button>
         </div>
       </AccordionEntry>
-      <AccordionEntry value='item-2' title='Geocercas'>
+      <AccordionEntry value='item-2' title='Geocercas' icon={<Compass />}>
         <div className='flex flex-col gap-2'>
           <Button variant={'outline'} className='flex-1 rounded-none'>
             <ShieldQuestionIcon className='w-6 h-6' />
@@ -43,7 +43,10 @@ const SidebarContent = () => {
           </Button>
         </div>
       </AccordionEntry>
-      <AccordionEntry value='item-3' title='Puntos de interés'>
+      <AccordionEntry
+        value='item-3'
+        title='Puntos de interés'
+        icon={<MapPin />}>
         <div className='flex flex-col gap-2'>
           <Button variant={'outline'} className='flex-1 rounded-none'>
             <ShieldQuestionIcon className='w-6 h-6' />
