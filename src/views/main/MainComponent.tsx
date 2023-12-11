@@ -12,11 +12,43 @@ import SidebarNavbar from './components/SidebarNavbar';
 import SidebarContent from './components/SidebarContent';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/stores/auth';
+import { Payment } from '../table/components/Columns';
+
+async function getData(): Promise<Payment[]> {
+  return [
+    {
+      id: '728ed52f',
+      amount: 100,
+      status: 'pending',
+      email: 'm@example.comasdfasdfsdafasdfsadfsafs',
+    },
+    {
+      id: '728ed52f',
+      amount: 200,
+      status: 'success',
+      email: 'm@example.com',
+    },
+    {
+      id: '728ed52f',
+      amount: 500,
+      status: 'pending',
+      email: 'm@example.com',
+    },
+    {
+      id: '728ed52f',
+      amount: 100,
+      status: 'failed',
+      email: 'm@example.com',
+    },
+  ];
+}
 
 const MainComponent = () => {
   const [showSidebar, setShowSidebar] = useState(true);
   const router = useRouter();
   const isAuth = useAuthStore.getState().isAuth;
+  const [payments, setPayments] = useState<Payment[]>([]);
+  const [isPaymentsLoading, setIsPaymentsLoading] = useState(false);
 
   const handleSidebar = () => {
     setShowSidebar((prev) => !prev);
@@ -26,6 +58,13 @@ const MainComponent = () => {
     if (!isAuth) {
       router.push('/login');
     }
+    setIsPaymentsLoading(true);
+    async function fetchData() {
+      const data = await getData();
+      setPayments(data);
+      setIsPaymentsLoading(false);
+    }
+    fetchData();
   }, [isAuth, router]);
 
   return (
@@ -39,7 +78,7 @@ const MainComponent = () => {
           <div className='flex flex-col'>
             <SidebarHeader handleSidebar={handleSidebar} />
             <SidebarNavbar />
-            <SidebarContent />
+            <SidebarContent units={payments} unitsLoading={isPaymentsLoading} />
           </div>
         </div>
         <Button

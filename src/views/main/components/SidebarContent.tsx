@@ -1,19 +1,16 @@
 'use client';
 import { Accordion } from '@/components/ui/accordion';
 import AccordionEntry from './AccordionEntry';
-import { Compass, MapPin, ShieldQuestionIcon, Truck } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
+import { Compass, Loader2, MapPin, Truck } from 'lucide-react';
+import { columns, type Payment } from '@/views/table/components/Columns';
+import { DataTable } from '@/views/table/DataTable';
 
-const SidebarContent = () => {
+type Props = {
+  units: Payment[];
+  unitsLoading: boolean;
+};
+
+const SidebarContent: React.FC<Props> = ({ units, unitsLoading }) => {
   return (
     <Accordion
       type='single'
@@ -21,60 +18,22 @@ const SidebarContent = () => {
       className='w-full text-white'
       defaultValue='item-1'>
       <AccordionEntry value='item-1' title='Unidades' icon={<Truck />}>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead className='w-[100px]'>Name</TableHead>
-              <TableHead>Invoice</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Method</TableHead>
-              <TableHead className='text-right'>Amount</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            <TableRow>
-              <TableCell className='font-medium'>INV001</TableCell>
-              <TableCell>Paid</TableCell>
-              <TableCell>Credit Card</TableCell>
-              <TableCell className='text-right'>$250.00</TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
+        {unitsLoading ? (
+          <div className='flex justify-center items-center h-32'>
+            <Loader2 className='h-10 w-10 animate-spin' />
+          </div>
+        ) : (
+          <DataTable columns={columns} data={units} />
+        )}
       </AccordionEntry>
       <AccordionEntry value='item-2' title='Geocercas' icon={<Compass />}>
-        <div className='flex flex-col gap-2'>
-          <Button variant={'outline'} className='flex-1 rounded-none'>
-            <ShieldQuestionIcon className='w-6 h-6' />
-            <span>Geocercas</span>
-          </Button>
-          <Button variant={'outline'} className='flex-1 rounded-none'>
-            <ShieldQuestionIcon className='w-6 h-6' />
-            <span>Geocercas</span>
-          </Button>
-          <Button variant={'outline'} className='flex-1 rounded-none'>
-            <ShieldQuestionIcon className='w-6 h-6' />
-            <span>Geocercas</span>
-          </Button>
-        </div>
+        <div className='flex flex-col gap-2'>asdf</div>
       </AccordionEntry>
       <AccordionEntry
         value='item-3'
         title='Puntos de interés'
         icon={<MapPin />}>
-        <div className='flex flex-col gap-2'>
-          <Button variant={'outline'} className='flex-1 rounded-none'>
-            <ShieldQuestionIcon className='w-6 h-6' />
-            <span>Rutas</span>
-          </Button>
-          <Button variant={'outline'} className='flex-1 rounded-none'>
-            <ShieldQuestionIcon className='w-6 h-6' />
-            <span>Rutas</span>
-          </Button>
-          <Button variant={'outline'} className='flex-1 rounded-none'>
-            <ShieldQuestionIcon className='w-6 h-6' />
-            <span>Rutas</span>
-          </Button>
-        </div>
+        <div className='flex flex-col gap-2'>asdf</div>
       </AccordionEntry>
     </Accordion>
   );
