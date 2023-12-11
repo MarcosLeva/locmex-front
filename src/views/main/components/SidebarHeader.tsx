@@ -1,12 +1,20 @@
 'use client';
 import { Book, LogOut, Settings, X } from 'lucide-react';
 import HeaderIcon from './HeaderIcon';
+import { useAuthStore } from '@/stores/auth';
+import { useRouter } from 'next/navigation';
 
 type Props = {
   handleSidebar: () => void;
 };
 
 const SidebarHeader: React.FC<Props> = ({ handleSidebar }) => {
+  const router = useRouter();
+  const handleLogout = () => {
+    useAuthStore.getState().logout();
+    router.push('/login');
+  };
+
   return (
     <header className='bg-slate-900 h-16 flex justify-between'>
       <div className='p-4 flex justify-center items-center'>
@@ -21,7 +29,7 @@ const SidebarHeader: React.FC<Props> = ({ handleSidebar }) => {
           <Settings className='h-5 w-5' />
         </HeaderIcon>
 
-        <HeaderIcon tooltip='Cerrar sesión'>
+        <HeaderIcon tooltip='Cerrar sesión' onClick={handleLogout}>
           <LogOut className='h-5 w-5' />
         </HeaderIcon>
 
