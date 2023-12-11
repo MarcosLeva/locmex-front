@@ -4,20 +4,27 @@ import { Button } from '@/components/ui/button';
 
 import { classNames } from '@/utils/classnames';
 import { Menu } from 'lucide-react';
-import { useState } from 'react';
+import { useLayoutEffect, useState } from 'react';
 import HeaderIcon from './components/HeaderIcon';
-import AccordionEntry from './components/AccordionEntry';
 import MapComponent from './Map';
 import SidebarHeader from './components/SidebarHeader';
 import SidebarNavbar from './components/SidebarNavbar';
 import SidebarContent from './components/SidebarContent';
+import { useRouter } from 'next/navigation';
 
 const MainComponent = () => {
   const [showSidebar, setShowSidebar] = useState(true);
+  const router = useRouter();
 
   const handleSidebar = () => {
     setShowSidebar((prev) => !prev);
   };
+
+  useLayoutEffect(() => {
+    // if (true) {
+    //   router.push('/login');
+    // }
+  }, [router]);
 
   return (
     <>
