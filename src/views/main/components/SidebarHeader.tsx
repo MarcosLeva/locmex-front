@@ -18,9 +18,10 @@ const SidebarHeader: React.FC<Props> = ({ handleSidebar }) => {
       .then((response) => {
         toast({
           title: 'Sesión cerrada',
-          description: response.data.message,
+          description: 'Sesión cerrada correctamente',
           duration: 2500,
         });
+        router.push('/login');
       })
       .catch((error) => {
         toast({

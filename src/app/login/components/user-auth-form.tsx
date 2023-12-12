@@ -41,7 +41,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
       .then((response) => {
         setIsLoading(false);
         if (response.data.success) {
-          router.push('/');
+          router.push('/monitor');
         }
       })
       .catch((error) => {
