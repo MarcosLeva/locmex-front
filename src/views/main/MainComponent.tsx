@@ -45,8 +45,6 @@ async function getData(): Promise<Payment[]> {
 
 const MainComponent = () => {
   const [showSidebar, setShowSidebar] = useState(true);
-  const router = useRouter();
-  const isAuth = useAuthStore.getState().isAuth;
   const [payments, setPayments] = useState<Payment[]>([]);
   const [isPaymentsLoading, setIsPaymentsLoading] = useState(false);
 
@@ -55,9 +53,6 @@ const MainComponent = () => {
   };
 
   useLayoutEffect(() => {
-    if (!isAuth) {
-      router.push('/login');
-    }
     setIsPaymentsLoading(true);
     async function fetchData() {
       const data = await getData();
@@ -65,7 +60,7 @@ const MainComponent = () => {
       setIsPaymentsLoading(false);
     }
     fetchData();
-  }, [isAuth, router]);
+  }, []);
 
   return (
     <>

@@ -10,11 +10,12 @@ import { Input } from '@/components/ui/input';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/stores/auth';
 import axios from 'axios';
+import { useToast } from '@/components/ui/use-toast';
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
-  const { login } = useAuthStore();
+  const { toast } = useToast();
 
   const router = useRouter();
 
@@ -44,15 +45,14 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
         }
       })
       .catch((error) => {
-        toast;
+        toast({
+          title: 'Credenciales incorrectas',
+          description: error.response.data.message,
+          variant: 'destructive',
+          duration: 2500,
+        });
         setIsLoading(false);
       });
-    // setIsLoading(false);
-    // if (response.success) {
-    //   login(response.token);
-    //   router.push('/');
-    // }
-    // window.alert(response.message);
   }
 
   return (
