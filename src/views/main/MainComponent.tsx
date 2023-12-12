@@ -1,53 +1,66 @@
 'use client';
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from '@/components/ui/accordion';
+
 import { Button } from '@/components/ui/button';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
+
 import { classNames } from '@/utils/classnames';
-import {
-  BadgeHelpIcon,
-  Book,
-  BookAIcon,
-  ExternalLinkIcon,
-  FileIcon,
-  FileQuestionIcon,
-  HeartPulseIcon,
-  HelpCircle,
-  HelpCircleIcon,
-  HelpingHand,
-  LogOut,
-  Menu,
-  MenuIcon,
-  Settings,
-  ShieldQuestionIcon,
-  Sidebar,
-  Sigma,
-  SignalIcon,
-  X,
-} from 'lucide-react';
-import { useState } from 'react';
+import { Menu } from 'lucide-react';
+import { useLayoutEffect, useState } from 'react';
 import HeaderIcon from './components/HeaderIcon';
-import AccordionEntry from './components/AccordionEntry';
 import MapComponent from './Map';
 import SidebarHeader from './components/SidebarHeader';
 import SidebarNavbar from './components/SidebarNavbar';
 import SidebarContent from './components/SidebarContent';
+import { useRouter } from 'next/navigation';
+import { useAuthStore } from '@/stores/auth';
+import { Payment } from '../table/components/Columns';
+
+async function getData(): Promise<Payment[]> {
+  return [
+    {
+      id: '728ed52f',
+      amount: 100,
+      status: 'pending',
+      email: 'm@example.comasdfasdfsdafasdfsadfsafs',
+    },
+    {
+      id: '728ed52f',
+      amount: 200,
+      status: 'success',
+      email: 'm@example.com',
+    },
+    {
+      id: '728ed52f',
+      amount: 500,
+      status: 'pending',
+      email: 'm@example.com',
+    },
+    {
+      id: '728ed52f',
+      amount: 100,
+      status: 'failed',
+      email: 'm@example.com',
+    },
+  ];
+}
 
 const MainComponent = () => {
-  const [showSidebar, setShowSidebar] = useState(false);
+  const [showSidebar, setShowSidebar] = useState(true);
+  const [payments, setPayments] = useState<Payment[]>([]);
+  const [isPaymentsLoading, setIsPaymentsLoading] = useState(false);
 
   const handleSidebar = () => {
     setShowSidebar((prev) => !prev);
   };
+
+  useLayoutEffect(() => {
+    setIsPaymentsLoading(true);
+    async function fetchData() {
+      const data = await getData();
+      setPayments(data);
+      setIsPaymentsLoading(false);
+    }
+    fetchData();
+  }, []);
 
   return (
     <>
@@ -60,7 +73,7 @@ const MainComponent = () => {
           <div className='flex flex-col'>
             <SidebarHeader handleSidebar={handleSidebar} />
             <SidebarNavbar />
-            <SidebarContent />
+            <SidebarContent units={payments} unitsLoading={isPaymentsLoading} />
           </div>
         </div>
         <Button
