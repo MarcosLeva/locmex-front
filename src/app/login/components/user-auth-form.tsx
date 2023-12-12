@@ -7,10 +7,9 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Icons } from '@/components/ui/Icons';
 import { Input } from '@/components/ui/input';
-// import { authUser } from '@/services/authUser';
 import { useRouter } from 'next/navigation';
-import { authUser } from '@/services/authUser';
 import { useAuthStore } from '@/stores/auth';
+import axios from 'axios';
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
@@ -36,13 +35,24 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
     event.preventDefault();
     setIsLoading(true);
 
-    const response = await authUser(user);
-    setIsLoading(false);
-    if (response.success) {
-      login(response.token);
-      router.push('/');
-    }
-    window.alert(response.message);
+    axios
+      .post('/api/auth/', user)
+      .then((response) => {
+        setIsLoading(false);
+        if (response.data.success) {
+          router.push('/');
+        }
+      })
+      .catch((error) => {
+        toast;
+        setIsLoading(false);
+      });
+    // setIsLoading(false);
+    // if (response.success) {
+    //   login(response.token);
+    //   router.push('/');
+    // }
+    // window.alert(response.message);
   }
 
   return (
