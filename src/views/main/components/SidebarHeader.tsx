@@ -3,6 +3,8 @@ import { Book, LogOut, Settings, X } from 'lucide-react';
 import HeaderIcon from './HeaderIcon';
 import { useAuthStore } from '@/stores/auth';
 import { useRouter } from 'next/navigation';
+import axios from 'axios';
+import { toast } from '@/components/ui/use-toast';
 
 type Props = {
   handleSidebar: () => void;
@@ -11,8 +13,23 @@ type Props = {
 const SidebarHeader: React.FC<Props> = ({ handleSidebar }) => {
   const router = useRouter();
   const handleLogout = () => {
-    useAuthStore.getState().logout();
-    router.push('/login');
+    axios
+      .post('/api/auth/logout')
+      .then((response) => {
+        toast({
+          title: 'Sesión cerrada',
+          description: response.data.message,
+          duration: 2500,
+        });
+      })
+      .catch((error) => {
+        toast({
+          title: 'Credenciales incorrectas',
+          description: error.response.data.message,
+          variant: 'destructive',
+          duration: 2500,
+        });
+      });
   };
 
   return (
