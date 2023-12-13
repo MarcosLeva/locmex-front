@@ -2,11 +2,11 @@
 import { Accordion } from '@/components/ui/accordion';
 import AccordionEntry from './AccordionEntry';
 import { Compass, Loader2, MapPin, Truck } from 'lucide-react';
-import { columns, type Payment } from '@/views/table/components/Columns';
+import { columns, type Vehiculos } from '@/views/table/components/Columns';
 import { DataTable } from '@/views/table/DataTable';
 
 type Props = {
-  units: Payment[];
+  units: Vehiculos[];
   unitsLoading: boolean;
 };
 
