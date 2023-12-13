@@ -42,6 +42,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
         setIsLoading(false);
         if (response.data.success) {
           router.push('/monitor');
+          router.refresh();
         }
       })
       .catch((error) => {

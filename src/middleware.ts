@@ -8,7 +8,6 @@ export function middleware(request: NextRequest) {
   if (!token) {
     return NextResponse.redirect(new URL('/login', request.nextUrl));
   }
-
   return NextResponse.next();
 }
 
