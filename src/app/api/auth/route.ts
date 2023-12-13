@@ -17,7 +17,6 @@ export async function POST(request: Request) {
 
   const headers = {
     'Set-Cookie': cookie.serialize('token', token, {
-      httpOnly: true,
       maxAge: 60 * 60 * 24 * 3,
       path: '/',
     }),

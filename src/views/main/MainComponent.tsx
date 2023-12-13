@@ -14,6 +14,7 @@ import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/stores/auth';
 import { Payment } from '../table/components/Columns';
 import { useMonitor } from '@/services/monitorData';
+import { useToast } from '@/components/ui/use-toast';
 
 async function getData(): Promise<Payment[]> {
   return [
@@ -48,15 +49,20 @@ const MainComponent = () => {
   const [showSidebar, setShowSidebar] = useState(true);
   const [payments, setPayments] = useState<Payment[]>([]);
   const [isPaymentsLoading, setIsPaymentsLoading] = useState(false);
-  const { data, error, isLoading, isRefetching } = useMonitor();
+  const { data, error, isError, isLoading, isRefetching } = useMonitor();
+  const { toast } = useToast();
 
-  if (isRefetching) console.log('refetching');
-
-  if (!isLoading && data) {
-    console.log(data);
-  }
   if (error) {
-    console.log(error);
+    toast({
+      title: 'Error',
+      description: 'Ocurrio un error al cargar los datos',
+      variant: 'destructive',
+      duration: 2500,
+    });
+  }
+
+  if (!isLoading && !isRefetching && data) {
+    console.log(data);
   }
 
   const handleSidebar = () => {
