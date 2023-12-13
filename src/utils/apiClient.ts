@@ -8,7 +8,7 @@ if (token) {
   headers = { Authorization: `${token}` };
 }
 
-const apiClient = axios.create({
+export const apiClient = axios.create({
   baseURL: 'http://54.214.130.15:8082/api/',
   headers,
 });
