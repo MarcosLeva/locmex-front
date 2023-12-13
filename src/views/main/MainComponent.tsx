@@ -19,7 +19,7 @@ const MainComponent = () => {
   const { data, error, isLoading, isRefetching } = useMonitor();
   const { toast } = useToast();
 
-  if (error && !isLoading && !isRefetching && !data) {
+  if (error && !isLoading && !isRefetching) {
     toast({
       title: 'Error',
       description: 'Ocurrio un error al cargar los datos',

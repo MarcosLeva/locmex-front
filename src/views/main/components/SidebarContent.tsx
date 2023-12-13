@@ -2,7 +2,7 @@
 import { Accordion } from '@/components/ui/accordion';
 import AccordionEntry from './AccordionEntry';
 import { Compass, Loader2, MapPin, Truck } from 'lucide-react';
-import { columns, type Vehiculos } from '@/views/table/components/Columns';
+import { useColumns, type Vehiculos } from '@/views/table/components/Columns';
 import { DataTable } from '@/views/table/DataTable';
 
 type Props = {
@@ -11,6 +11,7 @@ type Props = {
 };
 
 const SidebarContent: React.FC<Props> = ({ units, unitsLoading }) => {
+  const { columns } = useColumns();
   return (
     <Accordion
       type='single'

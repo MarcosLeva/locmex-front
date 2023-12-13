@@ -31,6 +31,15 @@ export function DataTable<TData, TValue>({
     getCoreRowModel: getCoreRowModel(),
   });
 
+  const _selectedRows = table
+    .getRowModel()
+    .rows.filter((row) => row.getIsSelected());
+  const selectedRows = _selectedRows.map((row) => row.original);
+
+  if (selectedRows.length > 0) {
+    console.log(selectedRows);
+  }
+
   return (
     <div className='rounded-md border'>
       <Table>
@@ -54,17 +63,24 @@ export function DataTable<TData, TValue>({
         </TableHeader>
         <TableBody>
           {table.getRowModel().rows?.length ? (
-            table.getRowModel().rows.map((row) => (
-              <TableRow
-                key={row.id}
-                data-state={row.getIsSelected() && 'selected'}>
-                {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </TableCell>
-                ))}
-              </TableRow>
-            ))
+            table.getRowModel().rows.map((row) => {
+              if (row.getIsSelected()) {
+              }
+              return (
+                <TableRow
+                  key={row.id}
+                  data-state={row.getIsSelected() && 'selected'}>
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell key={cell.id}>
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              );
+            })
           ) : (
             <TableRow>
               <TableCell colSpan={columns.length} className='h-24 text-center'>
