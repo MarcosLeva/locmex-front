@@ -1,7 +1,6 @@
 'use client';
 import { Book, LogOut, Settings, X } from 'lucide-react';
 import HeaderIcon from './HeaderIcon';
-import { useAuthStore } from '@/stores/auth';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import { toast } from '@/components/ui/use-toast';

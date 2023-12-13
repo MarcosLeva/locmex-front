@@ -1,5 +1,4 @@
-import MainComponent from '@/views/main/MainComponent';
-import Link from 'next/link';
+import Link from '@/utils/Link';
 
 export default function Home() {
   return (
