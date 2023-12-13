@@ -13,6 +13,7 @@ import SidebarContent from './components/SidebarContent';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/stores/auth';
 import { Payment } from '../table/components/Columns';
+import { useMonitor } from '@/services/monitorData';
 
 async function getData(): Promise<Payment[]> {
   return [
@@ -47,6 +48,16 @@ const MainComponent = () => {
   const [showSidebar, setShowSidebar] = useState(true);
   const [payments, setPayments] = useState<Payment[]>([]);
   const [isPaymentsLoading, setIsPaymentsLoading] = useState(false);
+  const { data, error, isLoading, isRefetching } = useMonitor();
+
+  if (isRefetching) console.log('refetching');
+
+  if (!isLoading && data) {
+    console.log(data);
+  }
+  if (error) {
+    console.log(error);
+  }
 
   const handleSidebar = () => {
     setShowSidebar((prev) => !prev);

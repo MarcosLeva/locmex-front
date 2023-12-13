@@ -3,7 +3,10 @@ import { useQuery } from '@tanstack/react-query';
 
 export const getMonitor = async () => {
   try {
-    const { data } = await apiClient.get('/monitor/get');
+    const { data } = await apiClient.post('monitor/get', {
+      filtros: '',
+      FechaModificacion: '',
+    });
     return data;
   } catch (error) {
     return error;
