@@ -51,6 +51,8 @@ export const useColumns = () => {
   const isAllSelected = useSelectedRows((state) => state.isAllSelected);
   const isSomeSelected = useSelectedRows((state) => state.isSomeSelected);
   const toggleAllSelected = useSelectedRows((state) => state.toggleAllSelected);
+  console.log(isAllSelected());
+  console.log(isSomeSelected());
 
   const columns: ColumnDef<Vehiculos>[] = [
     {

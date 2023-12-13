@@ -8,6 +8,7 @@ type Row = {
 
 type RowsState = {
   rows: Row[];
+  hasRows: boolean;
 };
 
 type Actions = {
@@ -16,10 +17,12 @@ type Actions = {
   isSomeSelected: () => boolean;
   isAllSelected: () => boolean;
   filterSelectedRows: (unfilteredRows: Vehiculos[]) => Vehiculos[];
+  setRows: (rows: Vehiculos[]) => void;
 };
 
 const initialState: RowsState = {
   rows: [],
+  hasRows: false,
 };
 
 export const useSelectedRows = create<RowsState & Actions>((set, get) => ({
@@ -48,6 +51,16 @@ export const useSelectedRows = create<RowsState & Actions>((set, get) => ({
     set({
       rows: rows.map((row) => ({ ...row, selected: true })),
     });
+  },
+
+  setRows: (newRows: Vehiculos[]) => {
+    const { hasRows, rows } = get();
+    if (hasRows && rows.length == newRows.length) return;
+    const _newRows = newRows.map((row) => ({
+      id: row.IdVehiculo,
+      selected: false,
+    }));
+    set({ rows: _newRows, hasRows: true });
   },
 
   filterSelectedRows: (unfilteredRows: Vehiculos[]) => {

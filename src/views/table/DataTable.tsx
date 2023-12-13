@@ -15,6 +15,8 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { useSelectedRows } from '@/stores/selectedRows';
+import { Vehiculos } from './components/Columns';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -31,13 +33,10 @@ export function DataTable<TData, TValue>({
     getCoreRowModel: getCoreRowModel(),
   });
 
-  const _selectedRows = table
-    .getRowModel()
-    .rows.filter((row) => row.getIsSelected());
-  const selectedRows = _selectedRows.map((row) => row.original);
-
-  if (selectedRows.length > 0) {
-    console.log(selectedRows);
+  const setRows = useSelectedRows((state) => state.setRows);
+  if (table.getRowModel().rows?.length != 0) {
+    const firstRows = table.getRowModel().rows.map((row) => row.original);
+    setRows(firstRows as Vehiculos[]);
   }
 
   return (
