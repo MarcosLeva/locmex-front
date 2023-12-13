@@ -2,7 +2,7 @@
 import { APIProvider, Map, Marker } from '@vis.gl/react-google-maps';
 import { Vehiculos } from '../table/components/Columns';
 import { useSelectedRows } from '@/stores/selectedRows';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 type Props = {
   units: Vehiculos[];
@@ -12,28 +12,27 @@ type Props = {
 type TruckPosition = {
   lat: number;
   lng: number;
+  id: string;
 };
 
 const MapComponent: React.FC<Props> = ({ units, unitsLoading }) => {
   const filterSelectedRows = useSelectedRows(
     (state) => state.filterSelectedRows
   );
-  const [filteredUnits, setFilteredUnits] = useState<Vehiculos[]>([]);
+
   const [truckPositions, setTruckPositions] = useState<TruckPosition[]>([]);
   const rows = useSelectedRows((state) => state.rows);
   const [position, setPosition] = useState({ lat: 19.432608, lng: -99.133209 });
-  const [zoom, setZoom] = useState(5);
+  const filtered = filterSelectedRows(units);
+  const positions = useMemo(() => {
+    return filtered.map((unit) => ({
+      lat: unit.Latitud,
+      lng: unit.Longitud,
+      id: unit.IdVehiculo,
+    }));
+  }, [filtered]);
 
   useEffect(() => {
-    const filtered = filterSelectedRows(units);
-    setFilteredUnits(() => filtered);
-    const positions = filteredUnits.map((unit) => {
-      return {
-        lat: unit.Latitud,
-        lng: unit.Longitud,
-      };
-    });
-    setTruckPositions(() => positions);
     const calculateCenter = () => {
       let lat = 0;
       let lng = 0;
@@ -46,14 +45,8 @@ const MapComponent: React.FC<Props> = ({ units, unitsLoading }) => {
       setPosition({ lat: lat / positions.length, lng: lng / positions.length });
     };
     calculateCenter();
-  }, [
-    units,
-    rows,
-    filteredUnits,
-    filterSelectedRows,
-    setFilteredUnits,
-    setTruckPositions,
-  ]);
+    setTruckPositions(positions);
+  }, [rows]);
 
   return (
     <div className=' w-auto h-screen z-0 '>
@@ -61,9 +54,10 @@ const MapComponent: React.FC<Props> = ({ units, unitsLoading }) => {
         <Map zoom={5} center={position}>
           {truckPositions.map((truckPosition, index) => (
             <Marker
-              key={index}
+              key={truckPosition.id}
               position={truckPosition}
-              icon='https://icons.iconarchive.com/icons/icons-land/transport/32/Lorry-icon.png'></Marker>
+              icon='https://icons.iconarchive.com/icons/icons-land/transport/32/Lorry-icon.png'
+              animation={google.maps.Animation.DROP}></Marker>
           ))}
         </Map>
       </APIProvider>

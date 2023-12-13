@@ -33,10 +33,14 @@ export function DataTable<TData, TValue>({
     getCoreRowModel: getCoreRowModel(),
   });
 
+  const rows = useSelectedRows((state) => state.rows);
   const setRows = useSelectedRows((state) => state.setRows);
+  const hasRows = useSelectedRows((state) => state.hasRows);
   if (table.getRowModel().rows?.length != 0) {
-    const firstRows = table.getRowModel().rows.map((row) => row.original);
-    setRows(firstRows as Vehiculos[]);
+    if (!hasRows && table.getRowModel().rows?.length != rows.length) {
+      const firstRows = table.getRowModel().rows.map((row) => row.original);
+      setRows(firstRows as Vehiculos[]);
+    }
   }
 
   return (
