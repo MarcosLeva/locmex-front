@@ -22,6 +22,7 @@ const SidebarHeader: React.FC<Props> = ({ handleSidebar }) => {
           duration: 2500,
         });
         router.push('/login');
+        router.refresh();
       })
       .catch((error) => {
         toast({
