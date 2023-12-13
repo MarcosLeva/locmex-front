@@ -69,7 +69,10 @@ const MainComponent = () => {
               </div>
             </header>
           )}
-          <MapComponent />
+          <MapComponent
+            units={data?.vehiculos || []}
+            unitsLoading={isLoading || isRefetching}
+          />
         </div>
       </div>
     </>
