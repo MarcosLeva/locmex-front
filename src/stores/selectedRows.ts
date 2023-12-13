@@ -1,3 +1,4 @@
+import { Vehiculos } from '@/views/table/components/Columns';
 import { create } from 'zustand';
 
 type Row = {
@@ -14,6 +15,7 @@ type Actions = {
   toggleAllSelected: () => void;
   isSomeSelected: () => boolean;
   isAllSelected: () => boolean;
+  filterSelectedRows: (unfilteredRows: Vehiculos[]) => Vehiculos[];
 };
 
 const initialState: RowsState = {
@@ -45,6 +47,14 @@ export const useSelectedRows = create<RowsState & Actions>((set, get) => ({
     }
     set({
       rows: rows.map((row) => ({ ...row, selected: true })),
+    });
+  },
+
+  filterSelectedRows: (unfilteredRows: Vehiculos[]) => {
+    const { rows } = get();
+    return unfilteredRows.filter((row) => {
+      const index = rows.findIndex((r) => r.id === row.IdVehiculo);
+      return index != -1 && rows[index].selected;
     });
   },
 }));
