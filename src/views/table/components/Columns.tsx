@@ -1,5 +1,11 @@
 'use client';
 
+import relativeTime from 'dayjs/plugin/relativeTime';
+import esmx from 'dayjs/locale/es-mx';
+import dayjs from 'dayjs';
+dayjs.extend(relativeTime);
+dayjs.locale(esmx);
+
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import {
@@ -64,8 +70,8 @@ export const columns: ColumnDef<Vehiculos>[] = [
     accessorKey: 'Nombre',
     header: 'Nombre',
     cell: ({ row }) => (
-      <div className='max-w-[90px] truncate'>
-        <span>{row.original.Nombre}dasfasdfasdfasd</span>
+      <div className='max-w-[70px] truncate'>
+        <span>{row.original.Nombre}</span>
       </div>
     ),
   },
@@ -84,8 +90,8 @@ export const columns: ColumnDef<Vehiculos>[] = [
       </TooltipProvider>
     ),
     cell: ({ row }) => (
-      <div className='max-w-[50px] truncate'>
-        <span>{row.original.Timestamp}asdfasfasfasfasfasfasf</span>
+      <div className='max-w-[90px] truncate'>
+        <span>{dayjs(row.original.Timestamp).fromNow()}</span>
       </div>
     ),
   },
@@ -93,7 +99,7 @@ export const columns: ColumnDef<Vehiculos>[] = [
     id: 'Estatus',
     header: 'Estatus',
     cell: ({ row }) => (
-      <div className='max-w-[60px] flex gap-1 items-center'>
+      <div className='max-w-[50px] flex gap-1 items-center'>
         <span
           className={`w-2 h-2 rounded-full ${
             row.original.Estatus === 'Normal' ? 'bg-green-500' : 'bg-slate-500'
@@ -106,7 +112,6 @@ export const columns: ColumnDef<Vehiculos>[] = [
   },
   {
     id: 'actions',
-    header: 'Acciones',
     cell: ({ row }) => (
       <DropdownMenu>
         <DropdownMenuTrigger asChild>

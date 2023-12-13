@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 
 import { classNames } from '@/utils/classnames';
 import { Menu } from 'lucide-react';
-import { useLayoutEffect, useState } from 'react';
+import { useState } from 'react';
 import HeaderIcon from './components/HeaderIcon';
 import MapComponent from './Map';
 import SidebarHeader from './components/SidebarHeader';
