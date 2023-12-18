@@ -1,4 +1,5 @@
 import axios, { AxiosResponse } from 'axios';
+import { apiClient } from '@/utils/apiClient';
 
 interface Response {
   token: string;
@@ -12,16 +13,17 @@ type User = {
 };
 
 const getToken = async (user: User): Promise<string> => {
-  if (user.user === 'admin' && user.password === 'admin') {
-    return 'Authorization "9Jv8l8hcPqvpopu1m8ikh9NcjtD+TSfPwy2WTU4GJJg="';
+  const { user: _user, password } = user;
+  if (!_user || !password) {
+    return '';
   }
-  return '';
-};
-
-const getHeaders = (token: string) => {
-  return {
-    Authorization: `Bearer ${token}`,
+  const headers = {
+    Authorization: `Basic ${_user}|${password}`,
   };
+  const response: AxiosResponse = await apiClient.get('/account/authenticate', {
+    headers,
+  });
+  return response?.data?.token || '';
 };
 
 export const authUser = async (user: User): Promise<Response> => {
@@ -32,21 +34,30 @@ export const authUser = async (user: User): Promise<Response> => {
   };
 
   try {
+    const { user: _user, password } = user;
+    if (!_user || !password) {
+      return FailedResponse;
+    }
+
     const token = await getToken(user);
-    const headers = getHeaders(token);
+    if (!token || token === '') {
+      return FailedResponse;
+    }
 
     const config = {
-      headers,
+      headers: {
+        Authorization: token,
+      },
     };
 
-    const response: AxiosResponse = await axios.get(
-      'http://54.214.130.15:8082/api/account/authenticate',
+    const response: AxiosResponse = await apiClient.get(
+      '/account/getuserconfig',
       config
     );
 
     if (response.status === 200) {
       return {
-        token: response.data.token,
+        token,
         success: true,
         message: 'Autenticación exitosa',
       };
