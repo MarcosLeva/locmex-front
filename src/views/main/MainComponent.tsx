@@ -4,63 +4,33 @@ import { Button } from '@/components/ui/button';
 
 import { classNames } from '@/utils/classnames';
 import { Menu } from 'lucide-react';
-import { useLayoutEffect, useState } from 'react';
+import { useState } from 'react';
 import HeaderIcon from './components/HeaderIcon';
 import MapComponent from './Map';
 import SidebarHeader from './components/SidebarHeader';
 import SidebarNavbar from './components/SidebarNavbar';
 import SidebarContent from './components/SidebarContent';
-import { useRouter } from 'next/navigation';
-import { useAuthStore } from '@/stores/auth';
-import { Payment } from '../table/components/Columns';
 
-async function getData(): Promise<Payment[]> {
-  return [
-    {
-      id: '728ed52f',
-      amount: 100,
-      status: 'pending',
-      email: 'm@example.comasdfasdfsdafasdfsadfsafs',
-    },
-    {
-      id: '728ed52f',
-      amount: 200,
-      status: 'success',
-      email: 'm@example.com',
-    },
-    {
-      id: '728ed52f',
-      amount: 500,
-      status: 'pending',
-      email: 'm@example.com',
-    },
-    {
-      id: '728ed52f',
-      amount: 100,
-      status: 'failed',
-      email: 'm@example.com',
-    },
-  ];
-}
+import { useMonitor } from '@/services/monitorData';
+import { useToast } from '@/components/ui/use-toast';
 
 const MainComponent = () => {
   const [showSidebar, setShowSidebar] = useState(true);
-  const [payments, setPayments] = useState<Payment[]>([]);
-  const [isPaymentsLoading, setIsPaymentsLoading] = useState(false);
+  const { data, error, isLoading, isRefetching } = useMonitor();
+  const { toast } = useToast();
+
+  if (error && !isLoading && !isRefetching) {
+    toast({
+      title: 'Error',
+      description: 'Ocurrio un error al cargar los datos',
+      variant: 'destructive',
+      duration: 2500,
+    });
+  }
 
   const handleSidebar = () => {
     setShowSidebar((prev) => !prev);
   };
-
-  useLayoutEffect(() => {
-    setIsPaymentsLoading(true);
-    async function fetchData() {
-      const data = await getData();
-      setPayments(data);
-      setIsPaymentsLoading(false);
-    }
-    fetchData();
-  }, []);
 
   return (
     <>
@@ -73,7 +43,10 @@ const MainComponent = () => {
           <div className='flex flex-col'>
             <SidebarHeader handleSidebar={handleSidebar} />
             <SidebarNavbar />
-            <SidebarContent units={payments} unitsLoading={isPaymentsLoading} />
+            <SidebarContent
+              units={data?.vehiculos || []}
+              unitsLoading={isLoading || isRefetching}
+            />
           </div>
         </div>
         <Button
@@ -96,7 +69,10 @@ const MainComponent = () => {
               </div>
             </header>
           )}
-          <MapComponent />
+          <MapComponent
+            units={data?.vehiculos || []}
+            unitsLoading={isLoading || isRefetching}
+          />
         </div>
       </div>
     </>
