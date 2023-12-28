@@ -22,7 +22,7 @@ const MainComponent = () => {
   if (error && !isLoading && !isRefetching) {
     toast({
       title: 'Error',
-      description: 'Ocurrio un error al cargar los datos',
+      description: 'Ocurrio un error al cargar los vehiculos',
       variant: 'destructive',
       duration: 2500,
     });
