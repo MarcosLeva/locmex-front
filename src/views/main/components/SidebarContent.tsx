@@ -30,7 +30,7 @@ const SidebarContent: React.FC<Props> = ({ units, unitsLoading }) => {
     <Accordion
       type='single'
       collapsible
-      className='w-full text-white'
+      className='w-full text-white overflow-y-auto h-[calc(100vh-7rem)]'
       defaultValue='item-1'>
       <AccordionEntry value='item-1' title='Unidades' icon={<Truck />}>
         {unitsLoading ? (
@@ -42,7 +42,7 @@ const SidebarContent: React.FC<Props> = ({ units, unitsLoading }) => {
         )}
       </AccordionEntry>
       <AccordionEntry value='item-2' title='Geocercas' icon={<Compass />}>
-        {isLoading ? (
+        {isLoading || isRefetching ? (
           <div className='flex justify-center items-center h-32'>
             <Loader2 className='h-10 w-10 animate-spin' />
           </div>
