@@ -1,12 +1,6 @@
 //
 'use client';
 
-import relativeTime from 'dayjs/plugin/relativeTime';
-import esmx from 'dayjs/locale/es-mx';
-import dayjs from 'dayjs';
-dayjs.extend(relativeTime);
-dayjs.locale(esmx);
-
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import {
@@ -14,26 +8,10 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
   DropdownMenuItem,
-  DropdownMenuSub,
-  DropdownMenuSubTrigger,
-  DropdownMenuSubContent,
 } from '@/components/ui/dropdown-menu';
-import {
-  Tooltip,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
-import { TooltipContent } from '@radix-ui/react-tooltip';
+
 import { ColumnDef } from '@tanstack/react-table';
-import {
-  BarChartHorizontal,
-  Delete,
-  Edit,
-  Flag,
-  MoreHorizontal,
-  Share,
-  User,
-} from 'lucide-react';
+import { Delete, Edit, MoreHorizontal } from 'lucide-react';
 import { useSelectedRows } from '@/stores/selectedRows';
 
 export type Geocercas = {
@@ -51,7 +29,7 @@ export type Geocercas = {
   FechaModificacion: string;
 };
 
-export const useColumns = () => {
+export const useGeoColumns = () => {
   // const handleSelectedRows = useSelectedRows(
   //   (state) => state.handleSelectedRows
   // );
@@ -93,7 +71,7 @@ export const useColumns = () => {
       accessorKey: 'Descripcion',
       header: 'Descripción',
       cell: ({ row }) => (
-        <div className='max-w-[70px] truncate'>
+        <div className='max-w-[280px] truncate'>
           <span>{row.original.Descripcion}</span>
         </div>
       ),
@@ -130,4 +108,4 @@ export const useColumns = () => {
   ];
   return { columns };
 };
-export default useColumns;
+export default useGeoColumns;

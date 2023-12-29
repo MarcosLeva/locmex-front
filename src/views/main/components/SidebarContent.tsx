@@ -11,6 +11,8 @@ import { DataTable } from '@/views/table/DataTable';
 import { useToast } from '@/components/ui/use-toast';
 import { useGeofences } from '@/services/geofencesData';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { CommonTable } from '@/views/table/CommonTable';
+import { useGeoColumns } from '@/views/table/components/GeoColumns';
 
 type Props = {
   units: Vehiculos[];
@@ -21,6 +23,7 @@ const SidebarContent: React.FC<Props> = ({ units, unitsLoading }) => {
   const { data, error, isLoading, isRefetching } = useGeofences();
   const { toast } = useToast();
   const { columns } = useColumns();
+  const { columns: geoColumns } = useGeoColumns();
 
   if (error && !isLoading && !isRefetching) {
     toast({
@@ -53,11 +56,7 @@ const SidebarContent: React.FC<Props> = ({ units, unitsLoading }) => {
               <Loader2 className='h-10 w-10 animate-spin' />
             </div>
           ) : (
-            <div className='w-full flex flex-col bg-blue-300'>
-              {data.map((geofence: any, index: any) => (
-                <p key={index}>{JSON.stringify(geofence)}</p>
-              ))}
-            </div>
+            <CommonTable columns={geoColumns} data={data} />
           )}
         </AccordionEntry>
         <AccordionEntry
