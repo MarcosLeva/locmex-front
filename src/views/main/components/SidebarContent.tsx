@@ -9,6 +9,8 @@ import { useGeofences } from '@/services/geofencesData';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { CommonTable } from '@/views/table/CommonTable';
 import { useGeoColumns } from '@/views/table/components/GeoColumns';
+import { useInterestPoints } from '@/services/IPData';
+import useIPColumns from '@/views/table/components/IPColumns';
 
 type Props = {
   units: Vehiculos[];
@@ -17,14 +19,30 @@ type Props = {
 
 const SidebarContent: React.FC<Props> = ({ units, unitsLoading }) => {
   const { data, error, isLoading, isRefetching } = useGeofences();
+  const {
+    data: IPData,
+    error: IPError,
+    isLoading: IPLoading,
+    isRefetching: IPRefetching,
+  } = useInterestPoints();
   const { toast } = useToast();
   const { columns } = useColumns();
   const { columns: geoColumns } = useGeoColumns();
+  const { columns: IPColumns } = useIPColumns();
 
   if (error && !isLoading && !isRefetching) {
     toast({
       title: 'Error',
       description: 'Ocurrio un error al cargar las geocercas',
+      variant: 'destructive',
+      duration: 2500,
+    });
+  }
+
+  if (IPError && !IPLoading && !IPRefetching) {
+    toast({
+      title: 'Error',
+      description: 'Ocurrio un error al cargar los puntos de interés',
       variant: 'destructive',
       duration: 2500,
     });
@@ -59,7 +77,13 @@ const SidebarContent: React.FC<Props> = ({ units, unitsLoading }) => {
           value='item-3'
           title='Puntos de interés'
           icon={<MapPin />}>
-          <div className='flex flex-col gap-2'>asdf</div>
+          {IPLoading || IPRefetching ? (
+            <div className='flex justify-center items-center h-32'>
+              <Loader2 className='h-10 w-10 animate-spin' />
+            </div>
+          ) : (
+            <CommonTable columns={IPColumns} data={IPData} />
+          )}
         </AccordionEntry>
       </Accordion>
     </ScrollArea>

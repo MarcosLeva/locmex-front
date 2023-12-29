@@ -10,7 +10,7 @@ export const getInterestPoints = async () => {
   }
 };
 
-export const useMonitor = () => {
+export const useInterestPoints = () => {
   return useQuery({
     queryKey: ['interestpoints'],
     queryFn: getInterestPoints,
