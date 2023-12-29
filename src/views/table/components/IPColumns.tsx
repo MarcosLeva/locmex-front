@@ -14,22 +14,15 @@ import { ColumnDef } from '@tanstack/react-table';
 import { Delete, Edit, MoreHorizontal } from 'lucide-react';
 import { useSelectedRows } from '@/stores/selectedRows';
 
-export type Geocercas = {
-  IdZona: string;
-  IdTipoZona: string;
-  IdExterno: string;
-  Descripcion: string;
-  Filtro: boolean;
-  Inclusion: boolean;
-  Activo: boolean;
-  IsMarked: boolean;
-  Latitud: number;
-  Longitud: number;
-  IdUsuarioModificacion: string;
-  FechaModificacion: string;
+export type InterestPoint = {
+  idPI: string;
+  Desc: string;
+  Lat: number;
+  Lon: number;
+  Act: boolean;
 };
 
-export const useGeoColumns = () => {
+export const useIPColumns = () => {
   // const handleSelectedRows = useSelectedRows(
   //   (state) => state.handleSelectedRows
   // );
@@ -38,7 +31,7 @@ export const useGeoColumns = () => {
   // const isSomeSelected = useSelectedRows((state) => state.isSomeSelected);
   // const toggleAllSelected = useSelectedRows((state) => state.toggleAllSelected);
 
-  const columns: ColumnDef<Geocercas>[] = [
+  const columns: ColumnDef<InterestPoint>[] = [
     {
       id: 'select',
       header: ({ table }) => (
@@ -68,11 +61,11 @@ export const useGeoColumns = () => {
       enableHiding: false,
     },
     {
-      accessorKey: 'Descripcion',
+      accessorKey: 'Desc',
       header: 'Nombre',
       cell: ({ row }) => (
         <div className='max-w-[280px] truncate'>
-          <span>{row.original.Descripcion}</span>
+          <span>{row.original.Desc}</span>
         </div>
       ),
     },
@@ -108,4 +101,4 @@ export const useGeoColumns = () => {
   ];
   return { columns };
 };
-export default useGeoColumns;
+export default useIPColumns;
