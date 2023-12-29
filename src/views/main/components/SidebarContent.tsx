@@ -1,9 +1,5 @@
 'use client';
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-} from '@/components/ui/accordion';
+import { Accordion } from '@/components/ui/accordion';
 import AccordionEntry from './AccordionEntry';
 import { Compass, Loader2, MapPin, Truck } from 'lucide-react';
 import { useColumns, type Vehiculos } from '@/views/table/components/Columns';

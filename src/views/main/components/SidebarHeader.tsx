@@ -33,13 +33,24 @@ const SidebarHeader: React.FC<Props> = ({ handleSidebar }) => {
       });
   };
 
+  const openNewPage = (url: string) => {
+    const newPage = window.open(url, '_blank');
+    newPage?.focus();
+  };
+
   return (
     <header className='bg-slate-900 h-16 flex justify-between'>
       <div className='p-4 flex justify-center items-center'>
         <img src='assets/logo.png' alt='logo' className='w-32' />
       </div>
       <div className='flex gap-2 items-center pr-2'>
-        <HeaderIcon tooltip='Aviso de privacidad'>
+        <HeaderIcon
+          tooltip='Aviso de privacidad'
+          onClick={() =>
+            openNewPage(
+              'https://publiclmx.s3-us-west-2.amazonaws.com/AVISO+DE+PRIVACIDAD+.pdf'
+            )
+          }>
           <Book className='h-5 w-5' />
         </HeaderIcon>
 
