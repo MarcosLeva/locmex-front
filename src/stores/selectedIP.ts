@@ -25,7 +25,7 @@ const initialState: RowsState = {
   hasRows: false,
 };
 
-export const useSelectedRows = create<RowsState & Actions>((set, get) => ({
+export const useSelectedIPRows = create<RowsState & Actions>((set, get) => ({
   ...initialState,
   handleSelectedIP: (id: string) => {
     const { rows } = get();

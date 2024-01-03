@@ -1,29 +1,41 @@
 'use client';
 import { APIProvider, Map, Marker } from '@vis.gl/react-google-maps';
 import { Vehiculos } from '../table/components/Columns';
+import { InterestPoint } from '../table/components/IPColumns';
 import { useSelectedRows } from '@/stores/selectedRows';
 import { useEffect, useMemo, useState } from 'react';
+import { useInterestPoints } from '@/services/IPData';
+import { useSelectedIPRows } from '@/stores/selectedIP';
 
 type Props = {
   units: Vehiculos[];
   unitsLoading: boolean;
 };
 
-type TruckPosition = {
+type Position = {
   lat: number;
   lng: number;
   id: string;
 };
 
 const MapComponent: React.FC<Props> = ({ units, unitsLoading }) => {
+  const { data: IPData } = useInterestPoints() as {
+    data: InterestPoint[];
+  };
   const filterSelectedRows = useSelectedRows(
     (state) => state.filterSelectedRows
   );
+  const filterSelectedIPRows = useSelectedIPRows(
+    (state) => state.filterSelectedIPRows
+  );
 
-  const [truckPositions, setTruckPositions] = useState<TruckPosition[]>([]);
+  const [truckPositions, setTruckPositions] = useState<Position[]>([]);
+  const [interestPoints, setInterestPoints] = useState<Position[]>([]);
   const rows = useSelectedRows((state) => state.rows);
+  const IPRows = useSelectedIPRows((state) => state.rows);
   const [position, setPosition] = useState({ lat: 19.432608, lng: -99.133209 });
   const filtered = filterSelectedRows(units);
+  const filteredIP = filterSelectedIPRows(IPData || []);
   const positions = useMemo(() => {
     return filtered.map((unit) => ({
       lat: unit.Latitud,
@@ -31,6 +43,14 @@ const MapComponent: React.FC<Props> = ({ units, unitsLoading }) => {
       id: unit.IdVehiculo,
     }));
   }, [filtered]);
+
+  const IPPositions = useMemo(() => {
+    return filteredIP.map((IP) => ({
+      lat: IP.Lat,
+      lng: IP.Lon,
+      id: IP.idPI,
+    }));
+  }, [filteredIP]);
 
   useEffect(() => {
     const calculateCenter = () => {
@@ -48,6 +68,10 @@ const MapComponent: React.FC<Props> = ({ units, unitsLoading }) => {
     setTruckPositions(positions);
   }, [rows]);
 
+  useEffect(() => {
+    setInterestPoints(IPPositions);
+  }, [IPRows]);
+
   return (
     <div className=' w-auto h-screen z-0 '>
       <APIProvider apiKey={process.env.NEXT_PUBLIC_MAPS_KEY || ''}>
@@ -57,6 +81,14 @@ const MapComponent: React.FC<Props> = ({ units, unitsLoading }) => {
               key={truckPosition.id}
               position={truckPosition}
               icon='https://icons.iconarchive.com/icons/icons-land/transport/32/Lorry-icon.png'
+              animation={google.maps.Animation.DROP}></Marker>
+          ))}
+
+          {interestPoints.map((IPPosition, index) => (
+            <Marker
+              key={IPPosition.id}
+              position={IPPosition}
+              icon='https://icons.iconarchive.com/icons/icons-land/transport/32/Truck-Top-Red-icon.png'
               animation={google.maps.Animation.DROP}></Marker>
           ))}
         </Map>
