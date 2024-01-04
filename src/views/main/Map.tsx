@@ -73,11 +73,11 @@ const MapComponent: React.FC<Props> = ({ units, unitsLoading }) => {
     };
     calculateCenter();
     setTruckPositions(positions);
-  }, [rows]);
+  }, [rows]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     setInterestPoints(IPPositions);
-  }, [IPRows]);
+  }, [IPRows]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div className=' w-auto h-screen z-0 '>
