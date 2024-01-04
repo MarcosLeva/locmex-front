@@ -18,6 +18,13 @@ type Position = {
   id: string;
 };
 
+const IP_ICONS = [
+  'https://icons.iconarchive.com/icons/icons-land/flat-vector-map-marker/32/Marker-3-Triangle-Green-icon.png',
+  'https://icons.iconarchive.com/icons/icons-land/flat-vector-map-marker/32/Marker-3-Triangle-Blue-icon.png',
+  'https://icons.iconarchive.com/icons/icons-land/flat-vector-map-marker/32/Marker-3-Triangle-Red-icon.png',
+  'https://icons.iconarchive.com/icons/icons-land/flat-vector-map-marker/32/Marker-3-Triangle-Yellow-icon.png',
+];
+
 const MapComponent: React.FC<Props> = ({ units, unitsLoading }) => {
   const { data: IPData } = useInterestPoints() as {
     data: InterestPoint[];
@@ -88,7 +95,7 @@ const MapComponent: React.FC<Props> = ({ units, unitsLoading }) => {
             <Marker
               key={IPPosition.id}
               position={IPPosition}
-              icon='https://icons.iconarchive.com/icons/icons-land/transport/32/Truck-Top-Red-icon.png'
+              icon={IP_ICONS[index % 4]}
               animation={google.maps.Animation.DROP}></Marker>
           ))}
         </Map>

@@ -11,6 +11,7 @@ import { CommonTable } from '@/views/table/CommonTable';
 import { useGeoColumns } from '@/views/table/components/GeoColumns';
 import { useInterestPoints } from '@/services/IPData';
 import useIPColumns from '@/views/table/components/IPColumns';
+import { CommonIPTable } from '@/views/table/IPTable';
 
 type Props = {
   units: Vehiculos[];
@@ -82,7 +83,7 @@ const SidebarContent: React.FC<Props> = ({ units, unitsLoading }) => {
               <Loader2 className='h-10 w-10 animate-spin' />
             </div>
           ) : (
-            <CommonTable columns={IPColumns} data={IPData} />
+            <CommonIPTable columns={IPColumns} data={IPData} />
           )}
         </AccordionEntry>
       </Accordion>
