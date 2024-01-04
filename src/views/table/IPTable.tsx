@@ -15,6 +15,8 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { useSelectedIPRows } from '@/stores/selectedIP';
+import { InterestPoint } from './components/IPColumns';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -30,6 +32,16 @@ export function CommonIPTable<TData, TValue>({
     columns,
     getCoreRowModel: getCoreRowModel(),
   });
+
+  const rows = useSelectedIPRows((state) => state.rows);
+  const setRows = useSelectedIPRows((state) => state.setIPRows);
+  const hasRows = useSelectedIPRows((state) => state.hasRows);
+  if (table.getRowModel().rows?.length != 0) {
+    if (!hasRows && table.getRowModel().rows?.length != rows.length) {
+      const firstRows = table.getRowModel().rows.map((row) => row.original);
+      setRows(firstRows as InterestPoint[]);
+    }
+  }
 
   return (
     <div className='rounded-md border'>
