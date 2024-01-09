@@ -9,11 +9,12 @@ import {
 import { Vehiculos } from '../table/components/Columns';
 import { InterestPoint } from '../table/components/IPColumns';
 import { useSelectedRows } from '@/stores/selectedRows';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useInterestPoints } from '@/services/IPData';
 import { useSelectedIPRows } from '@/stores/selectedIP';
 import { useGeofencesPoints } from '@/services/geofencesPointsData';
-import path from 'path';
+import { GeofencePoint } from '@/types/geoFences';
+import { get } from 'http';
 
 type Props = {
   units: Vehiculos[];
@@ -27,6 +28,8 @@ type Position = {
   description?: string;
 };
 
+type Path = Omit<Position, 'id'>;
+
 const IP_ICONS = [
   'https://icons.iconarchive.com/icons/icons-land/flat-vector-map-marker/32/Marker-3-Triangle-Green-icon.png',
   'https://icons.iconarchive.com/icons/icons-land/flat-vector-map-marker/32/Marker-3-Triangle-Blue-icon.png',
@@ -38,6 +41,12 @@ const mapContainerStyle = {
   height: '100%',
   width: '100%',
 };
+
+const selectedGeofences = [
+  '3028a758-670d-43fa-87c0-e184b1287703',
+  'bacb3df9-d9b2-454c-a444-fc4d1c22f1c4',
+  'dd2ad190-dc00-401c-9703-f564ee5f411e',
+];
 
 const MapComponent: React.FC<Props> = ({ units, unitsLoading }) => {
   const { data: IPData } = useInterestPoints() as {
@@ -52,6 +61,7 @@ const MapComponent: React.FC<Props> = ({ units, unitsLoading }) => {
 
   const [truckPositions, setTruckPositions] = useState<Position[]>([]);
   const [interestPoints, setInterestPoints] = useState<Position[]>([]);
+  const [paths, setPaths] = useState<Path[][]>([]);
   const [selectedIP, setSelectedIP] = useState<Position | undefined>(undefined);
   const rows = useSelectedRows((state) => state.rows);
   const IPRows = useSelectedIPRows((state) => state.rows);
@@ -75,23 +85,43 @@ const MapComponent: React.FC<Props> = ({ units, unitsLoading }) => {
     }));
   }, [filteredIP]);
 
-  const { data: geofencesPoints } = useGeofencesPoints();
+  const { data: geofencesPoints, isLoading } = useGeofencesPoints();
 
-  const filteresPoints = useMemo(() => {
-    return geofencesPoints?.filter(
-      (geoFences: any) =>
-        geoFences?.IdZona === '3028a758-670d-43fa-87c0-e184b1287703'
-    );
-  }, [geofencesPoints]);
+  const getPaths = useCallback(
+    (id: string) => {
+      return geofencesPoints
+        ?.filter((point: GeofencePoint) => point?.IdZona === id)
+        .map((point: GeofencePoint) => {
+          return {
+            lat: point?.Latitud,
+            lng: point?.Longitud,
+          };
+        });
+    },
+    [geofencesPoints]
+  );
 
-  const paths = useMemo(() => {
-    return filteresPoints?.map((geoFence: any) => {
-      return {
-        lat: geoFence?.Latitud,
-        lng: geoFence?.Longitud,
-      };
-    });
-  }, [filteresPoints]);
+  useEffect(() => {
+    const paths = selectedGeofences.map((id) => getPaths(id));
+    setPaths((prev) => [...prev, ...paths]);
+  }, [geofencesPoints, getPaths]);
+  // eslint-disable-line react-hooks/exhaustive-deps
+
+  // const filteresPoints = useMemo(() => {
+  //   return geofencesPoints?.filter(
+  //     (geoFences: any) =>
+  //       geoFences?.IdZona === '3028a758-670d-43fa-87c0-e184b1287703'
+  //   );
+  // }, [geofencesPoints]);
+
+  // const paths = useMemo(() => {
+  //   return filteresPoints?.map((geoFence: any) => {
+  //     return {
+  //       lat: geoFence?.Latitud,
+  //       lng: geoFence?.Longitud,
+  //     };
+  //   });
+  // }, [filteresPoints]);
 
   useEffect(() => {
     const calculateCenter = () => {
@@ -155,7 +185,19 @@ const MapComponent: React.FC<Props> = ({ units, unitsLoading }) => {
               </span>
             </InfoWindow>
           )}
-          <Polygon paths={paths} />
+          {paths &&
+            paths.length > 0 &&
+            paths.map((path, index) => (
+              <Polygon
+                key={index}
+                paths={path}
+                options={{
+                  strokeOpacity: 0.8,
+                  strokeWeight: 1,
+                  fillColor: '#FF0000',
+                }}
+              />
+            ))}
         </GoogleMap>
       </LoadScriptNext>
     </div>
