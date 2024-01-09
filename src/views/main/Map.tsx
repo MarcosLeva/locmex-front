@@ -87,17 +87,6 @@ const MapComponent = () => {
     }));
   }, [filteredIP]);
 
-  // const getPaths = (id: string) => {
-  //   return geofencesPoints
-  //     ?.filter((point: GeofencePoint) => point?.IdZona === id)
-  //     .map((point: GeofencePoint) => {
-  //       return {
-  //         lat: point?.Latitud,
-  //         lng: point?.Longitud,
-  //       };
-  //     });
-  // };
-
   const geoPaths = useMemo(() => {
     return filteredGeo.map((geofence: Geofence) => {
       const paths = geofencesPoints
@@ -112,24 +101,6 @@ const MapComponent = () => {
       return paths;
     });
   }, [filteredGeo]);
-
-  // eslint-disable-line react-hooks/exhaustive-deps
-
-  // const filteresPoints = useMemo(() => {
-  //   return geofencesPoints?.filter(
-  //     (geoFences: any) =>
-  //       geoFences?.IdZona === '3028a758-670d-43fa-87c0-e184b1287703'
-  //   );
-  // }, [geofencesPoints]);
-
-  // const paths = useMemo(() => {
-  //   return filteresPoints?.map((geoFence: any) => {
-  //     return {
-  //       lat: geoFence?.Latitud,
-  //       lng: geoFence?.Longitud,
-  //     };
-  //   });
-  // }, [filteresPoints]);
 
   useEffect(() => {
     const calculateCenter = () => {
