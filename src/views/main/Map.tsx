@@ -86,8 +86,11 @@ const MapComponent: React.FC<Props> = ({ units, unitsLoading }) => {
 
   return (
     <div className=' w-auto h-screen z-0 '>
-      <LoadScriptNext googleMapsApiKey={process.env.NEXT_PUBLIC_MAPS_KEY || ''}>
+      <LoadScriptNext
+        googleMapsApiKey={process.env.NEXT_PUBLIC_MAPS_KEY || ''}
+        id='main-script-loader'>
         <GoogleMap
+          id='main-map'
           zoom={5}
           center={position}
           mapContainerStyle={mapContainerStyle}>
