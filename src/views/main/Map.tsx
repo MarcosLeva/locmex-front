@@ -1,5 +1,5 @@
 'use client';
-import { APIProvider, Map, Marker } from '@vis.gl/react-google-maps';
+import { Marker, LoadScriptNext, GoogleMap } from '@react-google-maps/api';
 import { Vehiculos } from '../table/components/Columns';
 import { InterestPoint } from '../table/components/IPColumns';
 import { useSelectedRows } from '@/stores/selectedRows';
@@ -24,6 +24,11 @@ const IP_ICONS = [
   'https://icons.iconarchive.com/icons/icons-land/flat-vector-map-marker/32/Marker-3-Triangle-Red-icon.png',
   'https://icons.iconarchive.com/icons/icons-land/flat-vector-map-marker/32/Marker-3-Triangle-Yellow-icon.png',
 ];
+
+const mapContainerStyle = {
+  height: '100%',
+  width: '100%',
+};
 
 const MapComponent: React.FC<Props> = ({ units, unitsLoading }) => {
   const { data: IPData } = useInterestPoints() as {
@@ -81,8 +86,11 @@ const MapComponent: React.FC<Props> = ({ units, unitsLoading }) => {
 
   return (
     <div className=' w-auto h-screen z-0 '>
-      <APIProvider apiKey={process.env.NEXT_PUBLIC_MAPS_KEY || ''}>
-        <Map zoom={5} center={position}>
+      <LoadScriptNext googleMapsApiKey={process.env.NEXT_PUBLIC_MAPS_KEY || ''}>
+        <GoogleMap
+          zoom={5}
+          center={position}
+          mapContainerStyle={mapContainerStyle}>
           {truckPositions.map((truckPosition, index) => (
             <Marker
               key={truckPosition.id}
@@ -98,8 +106,8 @@ const MapComponent: React.FC<Props> = ({ units, unitsLoading }) => {
               icon={IP_ICONS[index % 4]}
               animation={google.maps.Animation.DROP}></Marker>
           ))}
-        </Map>
-      </APIProvider>
+        </GoogleMap>
+      </LoadScriptNext>
     </div>
   );
 };
