@@ -4,3 +4,8 @@ export type GeofencePoint = {
   IdZona: string;
   IdPunto: string;
 };
+
+export type Geofence = {
+  IdZona: string;
+  Descripcion: string;
+};
