@@ -4,6 +4,7 @@ import {
   LoadScriptNext,
   GoogleMap,
   InfoWindow,
+  Polygon,
 } from '@react-google-maps/api';
 import { Vehiculos } from '../table/components/Columns';
 import { InterestPoint } from '../table/components/IPColumns';
@@ -12,6 +13,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useInterestPoints } from '@/services/IPData';
 import { useSelectedIPRows } from '@/stores/selectedIP';
 import { useGeofencesPoints } from '@/services/geofencesPointsData';
+import path from 'path';
 
 type Props = {
   units: Vehiculos[];
@@ -72,6 +74,24 @@ const MapComponent: React.FC<Props> = ({ units, unitsLoading }) => {
       description: IP.Desc,
     }));
   }, [filteredIP]);
+
+  const { data: geofencesPoints } = useGeofencesPoints();
+
+  const filteresPoints = useMemo(() => {
+    return geofencesPoints?.filter(
+      (geoFences: any) =>
+        geoFences?.IdZona === '3028a758-670d-43fa-87c0-e184b1287703'
+    );
+  }, [geofencesPoints]);
+
+  const paths = useMemo(() => {
+    return filteresPoints?.map((geoFence: any) => {
+      return {
+        lat: geoFence?.Latitud,
+        lng: geoFence?.Longitud,
+      };
+    });
+  }, [filteresPoints]);
 
   useEffect(() => {
     const calculateCenter = () => {
@@ -135,6 +155,7 @@ const MapComponent: React.FC<Props> = ({ units, unitsLoading }) => {
               </span>
             </InfoWindow>
           )}
+          <Polygon paths={paths} />
         </GoogleMap>
       </LoadScriptNext>
     </div>

@@ -14,5 +14,7 @@ export const useInterestPoints = () => {
   return useQuery({
     queryKey: ['interestpoints'],
     queryFn: getInterestPoints,
+    staleTime: Infinity,
+    refetchOnWindowFocus: false,
   });
 };

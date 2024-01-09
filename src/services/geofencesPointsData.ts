@@ -14,5 +14,7 @@ export const useGeofencesPoints = () => {
   return useQuery({
     queryKey: ['geocercasPuntos'],
     queryFn: getGeofencesPoints,
+    staleTime: Infinity,
+    refetchOnWindowFocus: false,
   });
 };
