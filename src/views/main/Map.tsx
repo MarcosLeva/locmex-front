@@ -1,11 +1,17 @@
 'use client';
-import { Marker, LoadScriptNext, GoogleMap } from '@react-google-maps/api';
+import {
+  Marker,
+  LoadScriptNext,
+  GoogleMap,
+  InfoWindow,
+} from '@react-google-maps/api';
 import { Vehiculos } from '../table/components/Columns';
 import { InterestPoint } from '../table/components/IPColumns';
 import { useSelectedRows } from '@/stores/selectedRows';
 import { useEffect, useMemo, useState } from 'react';
 import { useInterestPoints } from '@/services/IPData';
 import { useSelectedIPRows } from '@/stores/selectedIP';
+import { useGeofencesPoints } from '@/services/geofencesPointsData';
 
 type Props = {
   units: Vehiculos[];
@@ -16,6 +22,7 @@ type Position = {
   lat: number;
   lng: number;
   id: string;
+  description?: string;
 };
 
 const IP_ICONS = [
@@ -43,6 +50,7 @@ const MapComponent: React.FC<Props> = ({ units, unitsLoading }) => {
 
   const [truckPositions, setTruckPositions] = useState<Position[]>([]);
   const [interestPoints, setInterestPoints] = useState<Position[]>([]);
+  const [selectedIP, setSelectedIP] = useState<Position | undefined>(undefined);
   const rows = useSelectedRows((state) => state.rows);
   const IPRows = useSelectedIPRows((state) => state.rows);
   const [position, setPosition] = useState({ lat: 19.432608, lng: -99.133209 });
@@ -61,6 +69,7 @@ const MapComponent: React.FC<Props> = ({ units, unitsLoading }) => {
       lat: IP.Lat,
       lng: IP.Lon,
       id: IP.idPI,
+      description: IP.Desc,
     }));
   }, [filteredIP]);
 
@@ -90,6 +99,9 @@ const MapComponent: React.FC<Props> = ({ units, unitsLoading }) => {
         googleMapsApiKey={process.env.NEXT_PUBLIC_MAPS_KEY || ''}
         id='main-script-loader'>
         <GoogleMap
+          onClick={() => {
+            if (selectedIP) setSelectedIP(undefined);
+          }}
           id='main-map'
           zoom={5}
           center={position}
@@ -107,8 +119,22 @@ const MapComponent: React.FC<Props> = ({ units, unitsLoading }) => {
               key={IPPosition.id}
               position={IPPosition}
               icon={IP_ICONS[index % 4]}
-              animation={google.maps.Animation.DROP}></Marker>
+              animation={google.maps.Animation.DROP}
+              onClick={() => setSelectedIP(IPPosition)}></Marker>
           ))}
+
+          {selectedIP && (
+            <InfoWindow
+              position={{
+                lat: selectedIP.lat,
+                lng: selectedIP.lng,
+              }}
+              onCloseClick={() => setSelectedIP(undefined)}>
+              <span className='text-slate-900'>
+                {selectedIP.description || 'Punto de interés'}
+              </span>
+            </InfoWindow>
+          )}
         </GoogleMap>
       </LoadScriptNext>
     </div>
