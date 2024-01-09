@@ -9,17 +9,17 @@ import {
 import { Vehiculos } from '../table/components/Columns';
 import { InterestPoint } from '../table/components/IPColumns';
 import { useSelectedRows } from '@/stores/selectedRows';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { createRef, useEffect, useMemo, useState } from 'react';
 import { useInterestPoints } from '@/services/IPData';
 import { useSelectedIPRows } from '@/stores/selectedIP';
 import { useGeofencesPoints } from '@/services/geofencesPointsData';
-import { GeofencePoint } from '@/types/geoFences';
-import { get } from 'http';
+import { Geofence, GeofencePoint } from '@/types/geoFences';
 
-type Props = {
-  units: Vehiculos[];
-  unitsLoading: boolean;
-};
+import { useSelectedGeoRows } from '@/stores/selectedGeo';
+import { useMonitor } from '@/services/monitorData';
+import { Loader, Loader2 } from 'lucide-react';
+import { useGeofences } from '@/services/geofencesData';
+import Polygons from './components/Polygons';
 
 type Position = {
   lat: number;
@@ -42,22 +42,22 @@ const mapContainerStyle = {
   width: '100%',
 };
 
-const selectedGeofences = [
-  '3028a758-670d-43fa-87c0-e184b1287703',
-  'bacb3df9-d9b2-454c-a444-fc4d1c22f1c4',
-  'dd2ad190-dc00-401c-9703-f564ee5f411e',
-];
+const MapComponent = () => {
+  const { data: IPData, isLoading: loadingIP } = useInterestPoints();
+  const { data: geofencesData, isLoading: loadingGeo } = useGeofences();
+  const { data: monitor, isLoading: loadingUnits } = useMonitor();
 
-const MapComponent: React.FC<Props> = ({ units, unitsLoading }) => {
-  const { data: IPData } = useInterestPoints() as {
-    data: InterestPoint[];
-  };
   const filterSelectedRows = useSelectedRows(
     (state) => state.filterSelectedRows
   );
   const filterSelectedIPRows = useSelectedIPRows(
     (state) => state.filterSelectedIPRows
   );
+  const filterSelectedGeoRows = useSelectedGeoRows(
+    (state) => state.filterSelectedGeoRows
+  );
+  const { data: geofencesPoints, isLoading: isLoadingGeoPoints } =
+    useGeofencesPoints();
 
   const [truckPositions, setTruckPositions] = useState<Position[]>([]);
   const [interestPoints, setInterestPoints] = useState<Position[]>([]);
@@ -65,9 +65,11 @@ const MapComponent: React.FC<Props> = ({ units, unitsLoading }) => {
   const [selectedIP, setSelectedIP] = useState<Position | undefined>(undefined);
   const rows = useSelectedRows((state) => state.rows);
   const IPRows = useSelectedIPRows((state) => state.rows);
+  const geoRows = useSelectedGeoRows((state) => state.rows);
   const [position, setPosition] = useState({ lat: 19.432608, lng: -99.133209 });
-  const filtered = filterSelectedRows(units);
+  const filtered = filterSelectedRows(monitor?.vehiculos || []);
   const filteredIP = filterSelectedIPRows(IPData || []);
+  const filteredGeo = filterSelectedGeoRows(geofencesData || []);
   const positions = useMemo(() => {
     return filtered.map((unit) => ({
       lat: unit.Latitud,
@@ -85,26 +87,32 @@ const MapComponent: React.FC<Props> = ({ units, unitsLoading }) => {
     }));
   }, [filteredIP]);
 
-  const { data: geofencesPoints, isLoading } = useGeofencesPoints();
+  // const getPaths = (id: string) => {
+  //   return geofencesPoints
+  //     ?.filter((point: GeofencePoint) => point?.IdZona === id)
+  //     .map((point: GeofencePoint) => {
+  //       return {
+  //         lat: point?.Latitud,
+  //         lng: point?.Longitud,
+  //       };
+  //     });
+  // };
 
-  const getPaths = useCallback(
-    (id: string) => {
-      return geofencesPoints
-        ?.filter((point: GeofencePoint) => point?.IdZona === id)
+  const geoPaths = useMemo(() => {
+    return filteredGeo.map((geofence: Geofence) => {
+      const paths = geofencesPoints
+        .filter((point: GeofencePoint) => point?.IdZona === geofence?.IdZona)
         .map((point: GeofencePoint) => {
           return {
             lat: point?.Latitud,
             lng: point?.Longitud,
           };
         });
-    },
-    [geofencesPoints]
-  );
 
-  useEffect(() => {
-    const paths = selectedGeofences.map((id) => getPaths(id));
-    setPaths((prev) => [...prev, ...paths]);
-  }, [geofencesPoints, getPaths]);
+      return paths;
+    });
+  }, [filteredGeo]);
+
   // eslint-disable-line react-hooks/exhaustive-deps
 
   // const filteresPoints = useMemo(() => {
@@ -142,6 +150,26 @@ const MapComponent: React.FC<Props> = ({ units, unitsLoading }) => {
   useEffect(() => {
     setInterestPoints(IPPositions);
   }, [IPRows]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    setPaths((prev) => {
+      const newPaths = [...geoPaths];
+      return newPaths;
+    });
+  }, [geoRows]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  if (
+    loadingGeo ||
+    loadingIP ||
+    loadingUnits ||
+    isLoadingGeoPoints ||
+    !geofencesPoints
+  )
+    return (
+      <div className='w-full h-screen flex justify-center items-center'>
+        <Loader2 className='h-10 w-10 animate-spin' />
+      </div>
+    );
 
   return (
     <div className=' w-auto h-screen z-0 '>
@@ -185,19 +213,7 @@ const MapComponent: React.FC<Props> = ({ units, unitsLoading }) => {
               </span>
             </InfoWindow>
           )}
-          {paths &&
-            paths.length > 0 &&
-            paths.map((path, index) => (
-              <Polygon
-                key={index}
-                paths={path}
-                options={{
-                  strokeOpacity: 0.8,
-                  strokeWeight: 1,
-                  fillColor: '#FF0000',
-                }}
-              />
-            ))}
+          <Polygons paths={paths} />
         </GoogleMap>
       </LoadScriptNext>
     </div>

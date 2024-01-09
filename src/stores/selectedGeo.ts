@@ -17,7 +17,7 @@ type Actions = {
   toggleAllSelectedGeo: () => void;
   isSomeGeoSelected: () => boolean;
   isAllGeoSelected: () => boolean;
-  filterSelectedGeoRows: (unfilteredRows: []) => Geofence[];
+  filterSelectedGeoRows: (unfilteredRows: Geofence[]) => Geofence[];
   setGeoRows: (rows: Geofence[]) => void;
 };
 
