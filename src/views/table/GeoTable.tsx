@@ -15,13 +15,15 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { useSelectedGeoRows } from '@/stores/selectedGeo';
+import { Geofence } from '@/types/geoFences';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
 }
 
-export function CommonTable<TData, TValue>({
+export function GeoTable<TData, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
@@ -30,6 +32,16 @@ export function CommonTable<TData, TValue>({
     columns,
     getCoreRowModel: getCoreRowModel(),
   });
+
+  const rows = useSelectedGeoRows((state) => state.rows);
+  const setRows = useSelectedGeoRows((state) => state.setGeoRows);
+  const hasRows = useSelectedGeoRows((state) => state.hasRows);
+  if (table.getRowModel().rows?.length != 0) {
+    if (!hasRows && table.getRowModel().rows?.length != rows.length) {
+      const firstRows = table.getRowModel().rows.map((row) => row.original);
+      setRows(firstRows as Geofence[]);
+    }
+  }
 
   return (
     <div className='rounded-md border'>

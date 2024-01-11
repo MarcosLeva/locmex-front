@@ -1,29 +1,75 @@
 'use client';
-import { APIProvider, Map, Marker } from '@vis.gl/react-google-maps';
+import {
+  Marker,
+  LoadScriptNext,
+  GoogleMap,
+  InfoWindow,
+  Polygon,
+} from '@react-google-maps/api';
 import { Vehiculos } from '../table/components/Columns';
+import { InterestPoint } from '../table/components/IPColumns';
 import { useSelectedRows } from '@/stores/selectedRows';
-import { useEffect, useMemo, useState } from 'react';
+import { createRef, useEffect, useMemo, useState } from 'react';
+import { useInterestPoints } from '@/services/IPData';
+import { useSelectedIPRows } from '@/stores/selectedIP';
+import { useGeofencesPoints } from '@/services/geofencesPointsData';
+import { Geofence, GeofencePoint } from '@/types/geoFences';
 
-type Props = {
-  units: Vehiculos[];
-  unitsLoading: boolean;
-};
+import { useSelectedGeoRows } from '@/stores/selectedGeo';
+import { useMonitor } from '@/services/monitorData';
+import { Loader, Loader2 } from 'lucide-react';
+import { useGeofences } from '@/services/geofencesData';
+import Polygons from './components/Polygons';
 
-type TruckPosition = {
+type Position = {
   lat: number;
   lng: number;
   id: string;
+  description?: string;
 };
 
-const MapComponent: React.FC<Props> = ({ units, unitsLoading }) => {
+type Path = Omit<Position, 'id'>;
+
+const IP_ICONS = [
+  'https://icons.iconarchive.com/icons/icons-land/flat-vector-map-marker/32/Marker-3-Triangle-Green-icon.png',
+  'https://icons.iconarchive.com/icons/icons-land/flat-vector-map-marker/32/Marker-3-Triangle-Blue-icon.png',
+  'https://icons.iconarchive.com/icons/icons-land/flat-vector-map-marker/32/Marker-3-Triangle-Red-icon.png',
+  'https://icons.iconarchive.com/icons/icons-land/flat-vector-map-marker/32/Marker-3-Triangle-Yellow-icon.png',
+];
+
+const mapContainerStyle = {
+  height: '100%',
+  width: '100%',
+};
+
+const MapComponent = () => {
+  const { data: IPData, isLoading: loadingIP } = useInterestPoints();
+  const { data: geofencesData, isLoading: loadingGeo } = useGeofences();
+  const { data: monitor, isLoading: loadingUnits } = useMonitor();
+
   const filterSelectedRows = useSelectedRows(
     (state) => state.filterSelectedRows
   );
+  const filterSelectedIPRows = useSelectedIPRows(
+    (state) => state.filterSelectedIPRows
+  );
+  const filterSelectedGeoRows = useSelectedGeoRows(
+    (state) => state.filterSelectedGeoRows
+  );
+  const { data: geofencesPoints, isLoading: isLoadingGeoPoints } =
+    useGeofencesPoints();
 
-  const [truckPositions, setTruckPositions] = useState<TruckPosition[]>([]);
+  const [truckPositions, setTruckPositions] = useState<Position[]>([]);
+  const [interestPoints, setInterestPoints] = useState<Position[]>([]);
+  const [paths, setPaths] = useState<Path[][]>([]);
+  const [selectedIP, setSelectedIP] = useState<Position | undefined>(undefined);
   const rows = useSelectedRows((state) => state.rows);
+  const IPRows = useSelectedIPRows((state) => state.rows);
+  const geoRows = useSelectedGeoRows((state) => state.rows);
   const [position, setPosition] = useState({ lat: 19.432608, lng: -99.133209 });
-  const filtered = filterSelectedRows(units);
+  const filtered = filterSelectedRows(monitor?.vehiculos || []);
+  const filteredIP = filterSelectedIPRows(IPData || []);
+  const filteredGeo = filterSelectedGeoRows(geofencesData || []);
   const positions = useMemo(() => {
     return filtered.map((unit) => ({
       lat: unit.Latitud,
@@ -31,6 +77,30 @@ const MapComponent: React.FC<Props> = ({ units, unitsLoading }) => {
       id: unit.IdVehiculo,
     }));
   }, [filtered]);
+
+  const IPPositions = useMemo(() => {
+    return filteredIP.map((IP) => ({
+      lat: IP.Lat,
+      lng: IP.Lon,
+      id: IP.idPI,
+      description: IP.Desc,
+    }));
+  }, [filteredIP]);
+
+  const geoPaths = useMemo(() => {
+    return filteredGeo.map((geofence: Geofence) => {
+      const paths = geofencesPoints
+        .filter((point: GeofencePoint) => point?.IdZona === geofence?.IdZona)
+        .map((point: GeofencePoint) => {
+          return {
+            lat: point?.Latitud,
+            lng: point?.Longitud,
+          };
+        });
+
+      return paths;
+    });
+  }, [filteredGeo]);
 
   useEffect(() => {
     const calculateCenter = () => {
@@ -46,12 +116,45 @@ const MapComponent: React.FC<Props> = ({ units, unitsLoading }) => {
     };
     calculateCenter();
     setTruckPositions(positions);
-  }, [rows]);
+  }, [rows]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    setInterestPoints(IPPositions);
+  }, [IPRows]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    setPaths((prev) => {
+      const newPaths = [...geoPaths];
+      return newPaths;
+    });
+  }, [geoRows]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  if (
+    loadingGeo ||
+    loadingIP ||
+    loadingUnits ||
+    isLoadingGeoPoints ||
+    !geofencesPoints
+  )
+    return (
+      <div className='w-full h-screen flex justify-center items-center'>
+        <Loader2 className='h-10 w-10 animate-spin' />
+      </div>
+    );
 
   return (
     <div className=' w-auto h-screen z-0 '>
-      <APIProvider apiKey={process.env.NEXT_PUBLIC_MAPS_KEY || ''}>
-        <Map zoom={5} center={position}>
+      <LoadScriptNext
+        googleMapsApiKey={process.env.NEXT_PUBLIC_MAPS_KEY || ''}
+        id='main-script-loader'>
+        <GoogleMap
+          onClick={() => {
+            if (selectedIP) setSelectedIP(undefined);
+          }}
+          id='main-map'
+          zoom={5}
+          center={position}
+          mapContainerStyle={mapContainerStyle}>
           {truckPositions.map((truckPosition, index) => (
             <Marker
               key={truckPosition.id}
@@ -59,8 +162,31 @@ const MapComponent: React.FC<Props> = ({ units, unitsLoading }) => {
               icon='https://icons.iconarchive.com/icons/icons-land/transport/32/Lorry-icon.png'
               animation={google.maps.Animation.DROP}></Marker>
           ))}
-        </Map>
-      </APIProvider>
+
+          {interestPoints.map((IPPosition, index) => (
+            <Marker
+              key={IPPosition.id}
+              position={IPPosition}
+              icon={IP_ICONS[index % 4]}
+              animation={google.maps.Animation.DROP}
+              onClick={() => setSelectedIP(IPPosition)}></Marker>
+          ))}
+
+          {selectedIP && (
+            <InfoWindow
+              position={{
+                lat: selectedIP.lat,
+                lng: selectedIP.lng,
+              }}
+              onCloseClick={() => setSelectedIP(undefined)}>
+              <span className='text-slate-900'>
+                {selectedIP.description || 'Punto de interés'}
+              </span>
+            </InfoWindow>
+          )}
+          <Polygons paths={paths} />
+        </GoogleMap>
+      </LoadScriptNext>
     </div>
   );
 };

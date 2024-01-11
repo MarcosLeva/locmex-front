@@ -9,38 +9,32 @@ import {
   DropdownMenuTrigger,
   DropdownMenuItem,
 } from '@/components/ui/dropdown-menu';
-import { useSelectedGeoRows } from '@/stores/selectedGeo';
 
 import { ColumnDef } from '@tanstack/react-table';
 import { Delete, Edit, MoreHorizontal } from 'lucide-react';
+import { useSelectedRows } from '@/stores/selectedRows';
+import { useSelectedIPRows } from '@/stores/selectedIP';
 
-export type Geocercas = {
-  IdZona: string;
-  IdTipoZona: string;
-  IdExterno: string;
-  Descripcion: string;
-  Filtro: boolean;
-  Inclusion: boolean;
-  Activo: boolean;
-  IsMarked: boolean;
-  Latitud: number;
-  Longitud: number;
-  IdUsuarioModificacion: string;
-  FechaModificacion: string;
+export type InterestPoint = {
+  idPI: string;
+  Desc: string;
+  Lat: number;
+  Lon: number;
+  Act: boolean;
 };
 
-export const useGeoColumns = () => {
-  const handleSelectedRows = useSelectedGeoRows(
-    (state) => state.handleSelectedGeo
+export const useIPColumns = () => {
+  const handleSelectedRows = useSelectedIPRows(
+    (state) => state.handleSelectedIP
   );
-  const rows = useSelectedGeoRows((state) => state.rows);
-  const isAllSelected = useSelectedGeoRows((state) => state.isAllGeoSelected);
-  const isSomeSelected = useSelectedGeoRows((state) => state.isSomeGeoSelected);
-  const toggleAllSelected = useSelectedGeoRows(
-    (state) => state.toggleAllSelectedGeo
+  const rows = useSelectedIPRows((state) => state.rows);
+  const isAllSelected = useSelectedIPRows((state) => state.isAllIPSelected);
+  const isSomeSelected = useSelectedIPRows((state) => state.isSomeIPSelected);
+  const toggleAllSelected = useSelectedIPRows(
+    (state) => state.toggleAllSelectedIP
   );
 
-  const columns: ColumnDef<Geocercas>[] = [
+  const columns: ColumnDef<InterestPoint>[] = [
     {
       id: 'select',
       header: ({ table }) => (
@@ -52,7 +46,7 @@ export const useGeoColumns = () => {
       ),
       cell: ({ row }) => {
         const index = rows.findIndex(
-          (selectedRow) => selectedRow.id === row.original.IdZona
+          (selectedRow) => selectedRow.id === row.original.idPI
         );
         const isSelected = index !== -1 ? rows[index].selected : false;
 
@@ -60,7 +54,7 @@ export const useGeoColumns = () => {
           <Checkbox
             checked={isSelected}
             onCheckedChange={(value) => {
-              handleSelectedRows(row.original.IdZona);
+              handleSelectedRows(row.original.idPI);
             }}
             aria-label='Select row'
           />
@@ -70,11 +64,11 @@ export const useGeoColumns = () => {
       enableHiding: false,
     },
     {
-      accessorKey: 'Descripcion',
+      accessorKey: 'Desc',
       header: 'Nombre',
       cell: ({ row }) => (
         <div className='max-w-[280px] truncate'>
-          <span>{row.original.Descripcion}</span>
+          <span>{row.original.Desc}</span>
         </div>
       ),
     },
@@ -110,4 +104,4 @@ export const useGeoColumns = () => {
   ];
   return { columns };
 };
-export default useGeoColumns;
+export default useIPColumns;
