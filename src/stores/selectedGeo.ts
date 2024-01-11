@@ -66,7 +66,7 @@ export const useSelectedGeoRows = create<RowsState & Actions>((set, get) => ({
 
   filterSelectedGeoRows: (unfilteredRows: Geofence[]) => {
     const { rows } = get();
-    return unfilteredRows.filter((row) => {
+    return unfilteredRows?.filter((row) => {
       const index = rows.findIndex((r) => r.id === row.IdZona);
       return index != -1 && rows[index].selected;
     });

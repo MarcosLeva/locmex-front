@@ -65,7 +65,7 @@ export const useSelectedIPRows = create<RowsState & Actions>((set, get) => ({
 
   filterSelectedIPRows: (unfilteredRows: InterestPoint[]) => {
     const { rows } = get();
-    return unfilteredRows.filter((row) => {
+    return unfilteredRows?.filter((row) => {
       const index = rows.findIndex((r) => r.id === row.idPI);
       return index != -1 && rows[index].selected;
     });

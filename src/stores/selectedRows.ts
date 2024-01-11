@@ -65,7 +65,7 @@ export const useSelectedRows = create<RowsState & Actions>((set, get) => ({
 
   filterSelectedRows: (unfilteredRows: Vehiculos[]) => {
     const { rows } = get();
-    return unfilteredRows.filter((row) => {
+    return unfilteredRows?.filter((row) => {
       const index = rows.findIndex((r) => r.id === row.IdVehiculo);
       return index != -1 && rows[index].selected;
     });
