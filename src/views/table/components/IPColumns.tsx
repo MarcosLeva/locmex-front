@@ -13,6 +13,7 @@ import {
 import { ColumnDef } from '@tanstack/react-table';
 import { Delete, Edit, MoreHorizontal } from 'lucide-react';
 import { useSelectedRows } from '@/stores/selectedRows';
+import { useSelectedIPRows } from '@/stores/selectedIP';
 
 export type InterestPoint = {
   idPI: string;
@@ -23,36 +24,38 @@ export type InterestPoint = {
 };
 
 export const useIPColumns = () => {
-  // const handleSelectedRows = useSelectedRows(
-  //   (state) => state.handleSelectedRows
-  // );
-  // const rows = useSelectedRows((state) => state.rows);
-  // const isAllSelected = useSelectedRows((state) => state.isAllSelected);
-  // const isSomeSelected = useSelectedRows((state) => state.isSomeSelected);
-  // const toggleAllSelected = useSelectedRows((state) => state.toggleAllSelected);
+  const handleSelectedRows = useSelectedIPRows(
+    (state) => state.handleSelectedIP
+  );
+  const rows = useSelectedIPRows((state) => state.rows);
+  const isAllSelected = useSelectedIPRows((state) => state.isAllIPSelected);
+  const isSomeSelected = useSelectedIPRows((state) => state.isSomeIPSelected);
+  const toggleAllSelected = useSelectedIPRows(
+    (state) => state.toggleAllSelectedIP
+  );
 
   const columns: ColumnDef<InterestPoint>[] = [
     {
       id: 'select',
       header: ({ table }) => (
         <Checkbox
-          // checked={isAllSelected() || (isSomeSelected() && 'indeterminate')}
-          // onCheckedChange={toggleAllSelected}
+          checked={isAllSelected() || (isSomeSelected() && 'indeterminate')}
+          onCheckedChange={toggleAllSelected}
           aria-label='Select all'
         />
       ),
       cell: ({ row }) => {
-        // const index = rows.findIndex(
-        //   (selectedRow) => selectedRow.id === row.original.IdZona
-        // );
-        // const isSelected = index !== -1 ? rows[index].selected : false;
+        const index = rows.findIndex(
+          (selectedRow) => selectedRow.id === row.original.idPI
+        );
+        const isSelected = index !== -1 ? rows[index].selected : false;
 
         return (
           <Checkbox
-            // checked={isSelected}
-            // onCheckedChange={(value) => {
-            //   handleSelectedRows(row.original.IdZona);
-            // }}
+            checked={isSelected}
+            onCheckedChange={(value) => {
+              handleSelectedRows(row.original.idPI);
+            }}
             aria-label='Select row'
           />
         );

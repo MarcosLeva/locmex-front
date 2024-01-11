@@ -62,7 +62,8 @@ const MainComponent = () => {
           {!showSidebar && (
             <header className="bg-slate-900 h-16 flex justify-between md:hidden">
               <div className="p-4 flex justify-center items-center">
-                <img src="assets/logo.png" alt="logo" className="w-32" />
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="assets/logo.png" alt="logo" className="w-32" />{" "}
               </div>
               <div className="flex gap-2 items-center pr-2">
                 <HeaderIcon tooltip="Abrir menu" onClick={handleSidebar}>
@@ -71,10 +72,7 @@ const MainComponent = () => {
               </div>
             </header>
           )}
-          <MapComponent
-            units={data?.vehiculos || []}
-            unitsLoading={isLoading || isRefetching}
-          />
+          <MapComponent />
         </div>
       </div>
     </>

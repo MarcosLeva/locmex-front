@@ -1,19 +1,19 @@
 import { apiClient } from '@/utils/apiClient';
 import { useQuery } from '@tanstack/react-query';
 
-export const getInterestPoints = async () => {
+export const getGeofencesPoints = async () => {
   try {
-    const { data } = await apiClient.post('monitor/getinterespoints');
+    const { data } = await apiClient.post('zonapunto/get', {});
     return data;
   } catch (error) {
     return error;
   }
 };
 
-export const useInterestPoints = () => {
+export const useGeofencesPoints = () => {
   return useQuery({
-    queryKey: ['interestpoints'],
-    queryFn: getInterestPoints,
+    queryKey: ['geocercasPuntos'],
+    queryFn: getGeofencesPoints,
     staleTime: Infinity,
     refetchOnWindowFocus: false,
   });

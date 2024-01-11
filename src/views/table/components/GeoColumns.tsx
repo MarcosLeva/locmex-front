@@ -9,10 +9,10 @@ import {
   DropdownMenuTrigger,
   DropdownMenuItem,
 } from '@/components/ui/dropdown-menu';
+import { useSelectedGeoRows } from '@/stores/selectedGeo';
 
 import { ColumnDef } from '@tanstack/react-table';
 import { Delete, Edit, MoreHorizontal } from 'lucide-react';
-import { useSelectedRows } from '@/stores/selectedRows';
 
 export type Geocercas = {
   IdZona: string;
@@ -30,36 +30,38 @@ export type Geocercas = {
 };
 
 export const useGeoColumns = () => {
-  // const handleSelectedRows = useSelectedRows(
-  //   (state) => state.handleSelectedRows
-  // );
-  // const rows = useSelectedRows((state) => state.rows);
-  // const isAllSelected = useSelectedRows((state) => state.isAllSelected);
-  // const isSomeSelected = useSelectedRows((state) => state.isSomeSelected);
-  // const toggleAllSelected = useSelectedRows((state) => state.toggleAllSelected);
+  const handleSelectedRows = useSelectedGeoRows(
+    (state) => state.handleSelectedGeo
+  );
+  const rows = useSelectedGeoRows((state) => state.rows);
+  const isAllSelected = useSelectedGeoRows((state) => state.isAllGeoSelected);
+  const isSomeSelected = useSelectedGeoRows((state) => state.isSomeGeoSelected);
+  const toggleAllSelected = useSelectedGeoRows(
+    (state) => state.toggleAllSelectedGeo
+  );
 
   const columns: ColumnDef<Geocercas>[] = [
     {
       id: 'select',
       header: ({ table }) => (
         <Checkbox
-          // checked={isAllSelected() || (isSomeSelected() && 'indeterminate')}
-          // onCheckedChange={toggleAllSelected}
+          checked={isAllSelected() || (isSomeSelected() && 'indeterminate')}
+          onCheckedChange={toggleAllSelected}
           aria-label='Select all'
         />
       ),
       cell: ({ row }) => {
-        // const index = rows.findIndex(
-        //   (selectedRow) => selectedRow.id === row.original.IdZona
-        // );
-        // const isSelected = index !== -1 ? rows[index].selected : false;
+        const index = rows.findIndex(
+          (selectedRow) => selectedRow.id === row.original.IdZona
+        );
+        const isSelected = index !== -1 ? rows[index].selected : false;
 
         return (
           <Checkbox
-            // checked={isSelected}
-            // onCheckedChange={(value) => {
-            //   handleSelectedRows(row.original.IdZona);
-            // }}
+            checked={isSelected}
+            onCheckedChange={(value) => {
+              handleSelectedRows(row.original.IdZona);
+            }}
             aria-label='Select row'
           />
         );

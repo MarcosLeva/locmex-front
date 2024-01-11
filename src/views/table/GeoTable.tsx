@@ -15,15 +15,15 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { useSelectedIPRows } from '@/stores/selectedIP';
-import { InterestPoint } from './components/IPColumns';
+import { useSelectedGeoRows } from '@/stores/selectedGeo';
+import { Geofence } from '@/types/geoFences';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
 }
 
-export function CommonIPTable<TData, TValue>({
+export function GeoTable<TData, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
@@ -33,13 +33,13 @@ export function CommonIPTable<TData, TValue>({
     getCoreRowModel: getCoreRowModel(),
   });
 
-  const rows = useSelectedIPRows((state) => state.rows);
-  const setRows = useSelectedIPRows((state) => state.setIPRows);
-  const hasRows = useSelectedIPRows((state) => state.hasRows);
+  const rows = useSelectedGeoRows((state) => state.rows);
+  const setRows = useSelectedGeoRows((state) => state.setGeoRows);
+  const hasRows = useSelectedGeoRows((state) => state.hasRows);
   if (table.getRowModel().rows?.length != 0) {
     if (!hasRows && table.getRowModel().rows?.length != rows.length) {
       const firstRows = table.getRowModel().rows.map((row) => row.original);
-      setRows(firstRows as InterestPoint[]);
+      setRows(firstRows as Geofence[]);
     }
   }
 
